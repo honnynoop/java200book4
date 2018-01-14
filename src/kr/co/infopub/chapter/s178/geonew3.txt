@@ -1,0 +1,178 @@
+001: <!DOCTYPE html>
+002: <html>
+003: <head>
+004: <title>How Far You Work</title>
+005: <meta charset="EUC-KR">
+006: <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+007: <style type="text/css">
+008: html {
+009: 	height: 100%
+010: }
+011: 
+012: body {
+013: 	height: 100%;
+014: 	margin: 0px;
+015: 	padding: 0px;
+016: 	font-size: 9pt;
+017: }
+018: 
+019: div {
+020: 	float: left;
+021: }
+022: 
+023: #map_canvas {
+024: 	width: 1200px;
+025: 	height: 700px
+026: }
+027: 
+028: #control {
+029: 	
+030: }
+031: 
+032: input {
+033: 	font-size: 9pt;
+034: }
+035: </style>
+036: <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB3vzzGs2oyx7h1WH_xfE4buUu4OCTAyZM"></script>
+037: <script type="text/javascript">
+038: 
+039: 	function drawLine(msg){
+040: 	     labelIndex = 0;
+041: 	  	 marklist = new Array();
+042: 		 lats = new Array();  // 위도 경도 저장용
+043: 		 lngs = new Array();
+044: 		 linelist = new Array();  // 선 리스트 저장
+045: 		 lineIndex = 0;  // 몇번째 선인지.
+046: 		 tripArray = new Array();
+047: 		 
+048: 		 tripArray=msg.loc;
+049: 		 initialize(tripArray[0].markerX,tripArray[0].markerY);
+050: 		 renewindex = tripArray.length;
+051: 		 renew(renewindex);
+052: 	};
+053: 
+054: 
+055: 
+056: 	var globalMap;
+057: 	var globalMarker;
+058: 	var globalGeocoder;
+059: 	var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+060: 	var labelIndex = 0;
+061: 	
+062: 	// 마커 저장용
+063:   	var marklist = new Array();
+064:    
+065: 	// 선 저장용
+066: 	var lats = new Array();  // 위도 경도 저장용
+067: 	var lngs = new Array();
+068: 	var linelist = new Array();  // 선 리스트 저장
+069: 	var lineIndex = 0;  // 몇번째 선인지.
+070:     var tripArray = new Array();
+071: 	var infowindow = null;
+072: 	
+073: 	// 맵 초기화
+074: 	function initialize(x, y) {
+075: 		// 입력된 좌표가 없으면 기본좌표를 역삼동으로 설정.
+076: 		if (x == 0) {
+077: 			x = 37.50075507977441;
+078: 		}
+079: 		if (y == 0) {
+080: 			y = 127.03690767288208;
+081: 		}
+082: 
+083: 		globalGeocoder = new google.maps.Geocoder();
+084: 
+085: 		var latlng = new google.maps.LatLng(x, y);
+086: 
+087: 		var myOptions = {
+088: 			zoom : 2,
+089: 
+090: 			//disableDoubleClickZoom:false,
+091: 			center : latlng,
+092: 
+093: 			navigationControl : false, // 눈금자 형태로 스케일 조절하는 컨트롤 활성화 선택.
+094: 			navigationControlOptions : {
+095: 				position : google.maps.ControlPosition.TOP_RIGHT,
+096: 				style : google.maps.NavigationControlStyle.DEFAULT
+097: 			// ANDROID, DEFAULT, SMALL, ZOOM_PAN
+098: 			},
+099: 
+100: 			streetViewControl : false,
+101: 
+102: 			scaleControl : false, // 지도 축적 보여줄 것인지.
+103: 
+104: 			mapTypeControl : false, // 지도,위성,하이브리드 등등 선택 컨트롤 보여줄 것인지
+105: 			mapTypeId : google.maps.MapTypeId.ROADMAP
+106: 		// HYBRID, ROADMAP, SATELLITE, TERRAIN
+107: 		};
+108: 
+109: 		globalMap = new google.maps.Map(document.getElementById("map_canvas"),
+110: 				myOptions);
+111: 
+112: 
+113: 		google.maps.event.addListener(globalMap, 'click', function(event) { // 지도클릭시 마커이동
+114: 			moveMarker(event.latLng);
+115: 		});
+116: 
+117: 	}
+118: 
+119: 	// 맵 중앙에 마크찍기
+120: 	function setMark() {
+121:       
+122:       var myOptions = {
+123:          position : globalMap.getCenter(),
+124:          draggable : true,
+125:          label : {
+126:             text : labels[labelIndex++ % labels.length],
+127:             color : 'black',
+128:             fontSize : '32px'
+129:          },
+130:          map : globalMap,
+131:          visible : true
+132:       };
+133:    }
+134: 	function renew(index){
+135: 	    infowindow = new google.maps.InfoWindow();
+136: 		// JSON 위도 경도에 따라 마크 찍는거 해야된다!
+137: 		for(i=0; i<index; i++){
+138: 		
+139: 		    var sites = tripArray[i];
+140:             var siteLatLng = new google.maps.LatLng(sites.markerX, sites.markerY);
+141:             var marker = new google.maps.Marker({
+142:                 position: siteLatLng,
+143:                 map: globalMap,
+144:                 title: sites.marknum,                 //지진 세기
+145:                 icon:'bar.png'
+146:                 //icon:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Flag_of_Hong_Kong.svg/44px-Flag_of_Hong_Kong.svg.png'
+147:             });
+148: 
+149: 
+150:             google.maps.event.addListener(marker, "click", function () {
+151:                 infowindow.setContent('Lat: '+this.position.lat()+'<br/>'+ 
+152:                                  'Lng: '+this.position.lng()+'<br/>'+ 'Mag: '+this.title);
+153:                 infowindow.open(globalMap, this);   //this-> 이벤트발생 marker
+154:             });
+155: 		
+156: 		
+157: 		
+158: 		  //원 그리기	
+159: 		  var myCity = new google.maps.Circle({
+160: 			    center: siteLatLng,
+161: 			    radius: tripArray[i].marknum*50000/2,
+162: 			    strokeColor: "#FF0000",
+163: 			    strokeOpacity: 1.0,
+164: 			    strokeWeight: 3,
+165: 			    fillColor: "#FF0000",
+166: 			    fillOpacity: 0.3
+167: 		   });
+168: 		  myCity.setMap(globalMap);
+169: 		}
+170: 	};
+171: 
+172: </script>
+173: </head>
+174: <body onload="initialize(0,0)">
+175: 	<div id="map_canvas"></div>
+176: 
+177: </body>
+178: </html>

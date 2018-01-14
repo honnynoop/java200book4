@@ -1,0 +1,46 @@
+01: package kr.co.infopub.chapter.s147;
+02: import java.util.List;
+03: public class ProductReaderMain {
+04:  public static void main(String[] args) {
+05: 	ProductReader kr=new ProductReader();
+06: 	ProductList plist=new ProductList();
+07: 	if(kr.isExist("kisul\\abc3031.txt")){
+08: 		kr.readTexts("kisul\\abc3031.txt");
+09: 		int num=kr.listSize();
+10: 		System.out.println("µ¥ÀÌÅ¸ °³¼ö: "+num);
+11: 		System.out.println("AllDatas===>");
+12: 		List<Product> producst=plist.getAllProducts(kr.getAllLines());
+13: 		int tot=0;
+14: 		for (Product p: producst) {
+15: 			System.out.println((++tot)+"\t"+p);
+16: 		}
+17: 		System.out.println("Grad in A or C===>");
+18: 		//String pGrade;    // Á¦Á¶µî±Þ ¹®ÀÚ 1 ¸¶Áö¸· ¹®ÀÚ
+19: 		String [] acc={"A","C"};
+20: 		List<Product> gradepros=plist.getAllProdInGrade(acc,producst);
+21: 		int tot2=0;
+22: 		for (Product p: gradepros) {
+23: 			System.out.println((++tot2)+"\t"+p);
+24: 		}
+25: 		System.out.println("Sort ===>");
+26: 		gradepros.sort(new ProductComp());
+27: 		tot2=0;
+28: 		for (Product p: gradepros) {
+29: 			System.out.print((++tot2)+"\t"+p);
+30: 			// °¨¼Ò °¨¼Ò Áõ°¡
+31: 			System.out.println("\tpMoney="+p.getPMoney()+
+32: 				"\tpPoint="+p.getPPoint()+"\tprodNum="+p.getProdNum());
+33: 		}
+34: 		// 5¹øÀÇ    Á¤º¸¸¦ ­ƒ·Â
+35: 		Product result=gradepros.get(4);
+36: 	    String msgs=String.format("%s\t%s\t%s", 
+37: 	    	result.getPMoney(),result.getPPoint(),result.getProdNum()) ;
+38: 	    //System.out.println(msgs);
+39: 		ResultWrite rw=new ResultWrite();
+40: 		System.out.println(rw.isExist("kisul\\Ans1.txt"));
+41: 		rw.setTexts("kisul\\Ans1.txt",msgs);
+42: 		String krs=kr.readText("kisul\\Ans1.txt");
+43: 		System.out.println(krs);
+44: 	}
+45:  }
+46: }

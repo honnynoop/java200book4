@@ -1,0 +1,98 @@
+01: package kr.co.infopub.chapter.s149;
+02: import java.util.Calendar;
+03: import javafx.application.Application;
+04: import javafx.scene.Scene;
+05: import javafx.scene.chart.CategoryAxis;
+06: import javafx.scene.chart.LineChart;
+07: import javafx.scene.chart.NumberAxis;
+08: import javafx.scene.chart.XYChart;
+09: import javafx.stage.Stage;
+10: public class Biorythms2 extends Application{
+11:  public static void main(String[] args) {
+12:     launch(args);
+13:   }
+14:   int dayWith=25;   // 기준일에 대하여 앞뒤로 25일 보이기
+15:   @Override
+16:   public void start(Stage primaryStage) {
+17: 	// 생일  
+18: 	int year=191;
+19: 	int month=9;
+20: 	int day=28;
+21: 	// 생일부터 오늘까지 몇일 살았는가?
+22: 	long live=BioCalendar.days(year, month, day)  ;  //오늘까지
+23: 	
+24: 	CategoryAxis xAxis = new CategoryAxis(); // X축
+25: 	NumberAxis yAxis = new NumberAxis();     // Y축
+26: 	yAxis.setLabel("Bio Power");
+27: 	xAxis.setLabel("Date");
+28: 	// XY 평면 준비
+29: 	LineChart<String, Number> lineChart = new LineChart<String, Number>(xAxis, yAxis);
+30: 	lineChart.setTitle("My Biorhythm");
+31:     // 1. 신체, 2. 감정, 3. 지능, 4. (1+2+3)/3 복합, 5. 오늘
+32: 	XYChart.Series<String, Number> series1 = new XYChart.Series<String, Number>(); // 1
+33: 	XYChart.Series<String, Number> series2 = new XYChart.Series<String, Number>(); // 2
+34: 	XYChart.Series<String, Number> series3 = new XYChart.Series<String, Number>(); // 3
+35: 	XYChart.Series<String, Number> series4 = new XYChart.Series<String, Number>(); // 4
+36: 	XYChart.Series<String, Number> series5 = new XYChart.Series<String, Number>(); // 5
+37: 	physicalChartData(series1,live);
+38: 	emotionalChartData(series2,live);
+39: 	intellectualChartData(series3,live);
+40: 	compositeChartData(series4,live);
+41: 	vertical(series5);
+42: 	
+43: 	Scene scene = new Scene(lineChart, 1200, 600);
+44:     lineChart.getData().addAll(series1, series2, series3,series4,series5);
+45:     
+46:     primaryStage.setScene(scene);
+47:     primaryStage.show();
+48:   }
+49:   // 오늘 수직선
+50:   public  void vertical(XYChart.Series<String, Number> series ) {
+51: 	Calendar todayCal=Calendar.getInstance();
+52:     series.setName("Today");
+53:     series.getData().add(new XYChart.Data<String, Number>(RestDay.toStrDate(todayCal), 125));
+54:     series.getData().add(new XYChart.Data<String, Number>(RestDay.toStrDate(todayCal), -125));
+55:   }
+56:   // 신체 지수 그리기 - 점들연결
+57:   public  void physicalChartData(XYChart.Series<String, Number> series, long live ) {
+58: 	Calendar todayCal=Calendar.getInstance();
+59:     series.setName("PHYSICAL");
+60:     for (int i = -dayWith; i < dayWith+1; i++) {
+61:     	 Calendar bf15day=RestDay.dateAfOrBf(todayCal,i);
+62:     	 double value=BioCalendar.getPhysical(live+i,100);
+63:     	 series.getData().add(new XYChart.Data<String, Number>(RestDay.toStrDate(bf15day), value));
+64:     }
+65:   }
+66:   // 감정 지수 그리기
+67:   public  void emotionalChartData(XYChart.Series<String, Number> series, long live ) {
+68: 	Calendar todayCal=Calendar.getInstance();
+69:     series.setName("EMOTIONAL");
+70:     for (int i = -dayWith; i < dayWith+1; i++) {
+71:     	 Calendar bf15day=RestDay.dateAfOrBf(todayCal,i);
+72:     	 double value=BioCalendar.getEmotional(live+i,100);
+73:     	 series.getData().add(new XYChart.Data<String, Number>(RestDay.toStrDate(bf15day), value));
+74:     }
+75:   }
+76:   // 지능 지수 그리기
+77:   public  void intellectualChartData(XYChart.Series<String, Number> series, long live ) {
+78: 	Calendar todayCal=Calendar.getInstance();
+79:     series.setName("INTELLECTUAL");
+80:     for (int i = -dayWith; i < dayWith+1; i++) {
+81:     	 Calendar bf15day=RestDay.dateAfOrBf(todayCal,i);
+82:     	 double value=BioCalendar.getIntellectual(live+i,100);
+83:     	 series.getData().add(new XYChart.Data<String, Number>(RestDay.toStrDate(bf15day), value));
+84:     }
+85:   }
+86:   // 복합 (신체+감정+지능)/3
+87:   public  void compositeChartData(XYChart.Series<String, Number> series, long live ) {
+88: 	Calendar todayCal=Calendar.getInstance();
+89:     series.setName("COMPOSITE");
+90:     for (int i = -dayWith; i < dayWith+1; i++) {
+91:     	 Calendar bf15day=RestDay.dateAfOrBf(todayCal,i);
+92:     	 double value=BioCalendar.getIntellectual(live+i,100)
+93:     			 +BioCalendar.getEmotional(live+i,100)
+94:     			 +BioCalendar.getPhysical(live+i,100);
+95:     	 series.getData().add(new XYChart.Data<String, Number>(RestDay.toStrDate(bf15day), value/3.0));
+96:     }
+97:   }
+98: }

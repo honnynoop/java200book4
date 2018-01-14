@@ -1,0 +1,32 @@
+01: package kr.co.infopub.chapter.s147;
+02: import java.util.Comparator;
+03: public class ProductComp implements Comparator<Product>{
+04: 	@Override
+05: 	public int compare(Product sg1, Product sg2) {
+06: 		int pMoney1=sg1.getPMoney();
+07: 		int pMoney2=sg2.getPMoney();
+08: 		int pPoint1=sg1.getPPoint();
+09: 		int pPoint2=sg2.getPPoint();
+10: 		int prodNum1=sg1.getProdNum();
+11: 		int prodNum2=sg2.getProdNum();
+12: 		if(pMoney1>pMoney2){   //Comparable을 구현안함
+13: 			return -1;  //내림차순
+14: 		}else if(pMoney1==pMoney2){
+15: 			if(pPoint1>pPoint2){
+16: 				return -1;//내림차순
+17: 			}else if(pPoint1==pPoint2){
+18: 				if(prodNum1>prodNum2){
+19: 					return 1;//오름차순
+20: 				}else if(prodNum1==prodNum2){
+21: 					return 0;//프라이머리키니깐 이런 일은 없을 것
+22: 				}else{
+23: 					return -1;//내림차순
+24: 				}
+25: 			}else{
+26: 				return 1;//오름차순
+27: 			}
+28: 		}else {
+29: 			return 1;//오름차순
+30: 		}
+31: 	}
+32: }

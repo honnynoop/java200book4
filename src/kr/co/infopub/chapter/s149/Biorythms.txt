@@ -1,0 +1,59 @@
+01: package kr.co.infopub.chapter.s149;
+02: import java.util.Calendar;
+03: import javafx.application.Application;
+04: import javafx.scene.Scene;
+05: import javafx.scene.chart.CategoryAxis;
+06: import javafx.scene.chart.LineChart;
+07: import javafx.scene.chart.NumberAxis;
+08: import javafx.scene.chart.XYChart;
+09: import javafx.stage.Stage;
+10: public class Biorythms extends Application{
+11:  public static void main(String[] args) {
+12:     launch(args);
+13:   }
+14:   int dayWith=25;   // 기준일에 대하여 앞뒤로 25일 보이기
+15:   @Override
+16:   public void start(Stage primaryStage) {
+17: 	// 생일  
+18: 	int year=1971;
+19: 	int month=9;
+20: 	int day=28;
+21: 	long live=BioCalendar.days(year, month, day)  ;  // 오늘까지 살아온날
+22: 	
+23: 	CategoryAxis xAxis = new CategoryAxis();
+24: 	NumberAxis yAxis = new NumberAxis();
+25: 	yAxis.setLabel("Bio Power");
+26: 	xAxis.setLabel("Date");
+27: 	LineChart<String, Number> lineChart = new LineChart<String, Number>(xAxis, yAxis);
+28: 	lineChart.setTitle("My Biorhythm");
+29:     // 신체지수 
+30: 	XYChart.Series<String, Number> series1 = new XYChart.Series<String, Number>();
+31: 	XYChart.Series<String, Number> series5 = new XYChart.Series<String, Number>();
+32: 	physicalChartData(series1,live);  // 신체지수 그리기
+33: 	vertical(series5);                // 수직선 그리기
+34: 	
+35: 	Scene scene = new Scene(lineChart, 1200, 600);
+36:     lineChart.getData().addAll(series1,series5); // 점들을 선으로 연결
+37:     primaryStage.setScene(scene);
+38:     primaryStage.show();
+39:   }
+40:   // 오늘 수직선
+41:   public  void vertical(XYChart.Series<String, Number> series ) {
+42: 	Calendar todayCal=Calendar.getInstance();
+43:     series.setName("Today");
+44:     // 오늘- 최대값, 최소값을 수직연결
+45:     series.getData().add(new XYChart.Data<String, Number>(RestDay.toStrDate(todayCal), 125));
+46:     series.getData().add(new XYChart.Data<String, Number>(RestDay.toStrDate(todayCal), -125));
+47:   }
+48:   // 신체 지수 그리기 - 점들연결
+49:   public  void physicalChartData(XYChart.Series<String, Number> series, long live ) {
+50: 	Calendar todayCal=Calendar.getInstance();
+51:     series.setName("PHYSICAL");
+52:     for (int i = -dayWith; i < dayWith+1; i++) {
+53:     	 Calendar bf15day=RestDay.dateAfOrBf(todayCal,i);  // 살아온날
+54:     	 double value=BioCalendar.getPhysical(live+i,100); // 신체지수 값
+55:     	 // 날짜에 대하여 신체지수값을 XY로 점을 찍고 연결
+56:     	 series.getData().add(new XYChart.Data<String, Number>(RestDay.toStrDate(bf15day), value));
+57:     }
+58:   }
+59: }

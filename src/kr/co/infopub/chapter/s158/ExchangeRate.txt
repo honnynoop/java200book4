@@ -1,0 +1,32 @@
+01: package kr.co.infopub.chapter.s158;
+02: import java.util.Scanner;
+03: public class ExchangeRate {
+04: 	public static void main(String[] args) {
+05: 		System.out.println("USD로 환전하려면 1, JPY로 환전하려면 2, CNY로 환전 하려면 3을 입력하세요.");
+06: 		Scanner scann=new Scanner(System.in);//키보드
+07: 		int choice=scann.nextInt();//키보드로 정수 입력
+08: 		String me="KRW";
+09: 		String you="USD";      // 미국 달러 
+10: 		String date=RestDay.todates();  // 오늘 날짜를 문자열로 "2017-06-22"
+11: 		double krw=1000000;    // 1000000원
+12: 		double result=0.0;     // 환전결과
+13: 		FixerRate finance=null;
+14: 		if(choice==1){
+15: 			you="USD";   // USDKRW 미국의 달러를 한화로 
+16: 		}else if(choice==2){
+17: 			you="JPY";  // JPYKRW 일본의 엔을 한화로 
+18: 		}else if(choice==3){
+19: 			you="CNY";  // CNYKRW 중국의 위안을 한화로  
+20: 		}else{
+21: 			System.out.println("환전할 수 없습니다.");
+22: 		}
+23: 		finance=FixerConvert.convert(date, you); //비율을 얻어서
+24: 		result=calculate(krw,finance.krw);       //계산
+25: 		System.out.println(finance.date+"기준");
+26: 		System.out.printf( "%.2f %s은 %.2f %s입니다.\n",krw,me,result,you);
+27: 	}
+28: 	//나누는 행위를 반복 -> 메서드로 만든다.
+29: 	public static double calculate(double krwMoney, double ratio){
+30: 		return krwMoney/ratio;
+31: 	}
+32: }

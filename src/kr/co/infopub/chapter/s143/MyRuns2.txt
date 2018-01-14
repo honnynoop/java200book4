@@ -1,0 +1,20 @@
+01: package kr.co.infopub.chapter.s143;
+02: public class  MyRuns2 implements Runnable{
+03: 	private int i=0;   //멤버 자원공유
+04: 	public void run(){
+05: 		show();
+06: 	}
+07: 	public synchronized void show(){
+08: 		for(  ;i<500;i++){
+09: 			if(((Thread.currentThread()).getName()).equals("a") ){
+10: 				System.out.print("A");
+11: 			}else if(((Thread.currentThread()).getName()).equals("b") ){
+12: 				System.out.print("B");
+13: 			}else if(((Thread.currentThread()).getName()).equals("c") ){
+14: 				System.out.print("C");
+15: 			}else{
+16: 				System.out.print("["+Thread.currentThread().getName()+i+"]");
+17: 			}
+18: 		}
+19: 	}
+20: }

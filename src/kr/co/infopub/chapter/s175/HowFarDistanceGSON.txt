@@ -1,0 +1,43 @@
+01: package kr.co.infopub.chapter.s175;
+02: import java.io.BufferedReader;
+03: import java.io.FileReader;
+04: import java.util.ArrayList;
+05: import org.json.simple.JSONArray;
+06: import org.json.simple.JSONObject;
+07: import org.json.simple.JSONValue;
+08: // google - simple json
+09: public class HowFarDistanceGSON {
+10:  private  JSONObject jObject;
+11:  public HowFarDistanceGSON (){
+12: 	makeDistances();
+13:  }
+14:  private  void makeDistances(){
+15: 	try (BufferedReader reader = 
+16: 		new BufferedReader(new FileReader("loc.json"))){
+17:         Object obj = JSONValue.parse(reader);
+18:         jObject = (JSONObject) obj;
+19:     } catch (Exception ex) {
+20:        System.out.println(ex);
+21:     }
+22:  }
+23:  public  double [][] getLatLng(){
+24: 	JSONArray loc = (JSONArray)jObject.get("loc");
+25: 	double [][]latlng=new double[loc.size()][2];
+26: 	for(int i=0; i<loc.size(); i++) {
+27: 		JSONObject local = (JSONObject)loc.get(i);
+28: 		String markerX = (String)local.get("markerX");
+29: 		String markerY = (String)local.get("markerY");
+30: 		latlng[i][0]=Double.parseDouble(markerX.trim());
+31: 		latlng[i][1]=Double.parseDouble(markerY.trim());
+32: 	}	
+33: 	return latlng;
+34:  }
+35:  public ArrayList<Geo> getGeos(){
+36: 	 ArrayList<Geo> geos=new ArrayList<>();
+37: 	 double [][] ltln=getLatLng();
+38: 	 for (int i = 0; i < ltln.length; i++) {
+39: 		 geos.add(new Geo(ltln[i][0],ltln[i][1]));
+40: 	 }
+41: 	 return geos;
+42:  }
+43: }

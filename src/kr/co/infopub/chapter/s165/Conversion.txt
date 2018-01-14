@@ -1,0 +1,44 @@
+01: package kr.co.infopub.chapter.s165;
+02: // 2차원 배열과 메서드
+03: public class Conversion {
+04:  public static final String [] names={"Cm","M","Inch","Feet","Yard","Mile"};
+05:  public static final double []distance={1,0.01,0.3937007874015748,
+06: 		0.03280839895013123,0.010936132983377079,0.00000621371192237334};
+07:  //2차원 배열로 동적(new)하는 방법
+08:  public static double [][] convert(){
+09: 	double [][] mm=new double [distance.length][distance.length];
+10: 	for(int i=0; i<distance.length; i++){
+11: 		for (int j = 0; j < distance.length; j++) {
+12: 			mm[i][j]=distance[j]/distance[i];
+13: 		}
+14: 	}
+15: 	return mm;
+16:  }
+17:  public static void main(String[] args) {
+18: 	//2차원 환선표 작성
+19: 	double [][] convDistance=convert() ;
+20: 	System.out.printf("\t\t");
+21: 	for(int i=0; i<names.length; i++){
+22: 		System.out.printf("%s\t\t\t",names[i]);
+23: 	}
+24: 	System.out.println();
+25: 	for(int i=0; i<convDistance.length; i++){
+26: 		System.out.printf("%s\t",names[i]);
+27: 		for (int j = 0; j < convDistance[i].length; j++) {
+28: 			System.out.printf("%19.12f\t",convDistance[i][j]);
+29: 		}
+30: 		System.out.println();
+31: 	}
+32: 	//계산 확인
+33: 	double value=100000; 
+34: 	int selectIndex=0; //cm
+35: 	double   cm=value*convDistance[selectIndex][0];
+36: 	double    m=value*convDistance[selectIndex][1];
+37: 	double inch=value*convDistance[selectIndex][2];
+38: 	double feet=value*convDistance[selectIndex][3];
+39: 	double yard=value*convDistance[selectIndex][4];
+40: 	double mile=value*convDistance[selectIndex][5];
+41: 	System.out.printf("%fcm=\t%fm=\t%finch=\t%ffeet=\t%fyard=\t%fmile\n",
+42: 			cm,m,inch,feet,yard,mile);
+43:  }
+44: }

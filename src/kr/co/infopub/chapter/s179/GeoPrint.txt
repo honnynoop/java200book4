@@ -1,0 +1,56 @@
+01: package kr.co.infopub.chapter.s179;
+02: import java.io.FileWriter;
+03: import java.io.IOException;
+04: import java.io.PrintWriter;
+05: import java.util.List;
+06: import org.json.JSONArray;
+07: import org.json.JSONObject;
+08: public class GeoPrint {
+09:  private static String pair(KREarthQuake bb){
+10: 	String markerX=pair("markerX",bb.getLatitude()+"");
+11: 	String markerY=pair("markerY",bb.getLongitude()+"");
+12: 	String marknum=pair("marknum",bb.getMagnitude()+"");
+13: 	return String.format("{%s,%s,%s}",marknum, markerX,markerY);
+14:  }
+15:  // "key":"value"
+16:  private static String pair(String key, String value){
+17: 	String ss=String.format("\"%s\":\"%s\"", key,value);
+18: 	return ss;
+19:  }
+20:  // {"loc": [{"key1":"value1"},{"key2":"value2"}}
+21:  public static String toJson(List<KREarthQuake> bblist){
+22: 	String ss="";
+23: 	ss=ss.concat("{\"loc\": [");
+24: 	for(int i=0; i<bblist.size()-1 ;i++){
+25: 		KREarthQuake bb=bblist.get(i);
+26: 		ss=ss.concat(pair(bb)+",");
+27: 	}
+28: 	ss=ss.concat(pair(bblist.get(bblist.size()-1 )));
+29: 	ss=ss.concat("]}");
+30: 	System.out.println( ss);
+31: 	return ss;
+32:  }
+33:  public static JSONObject toJsonObject(List<KREarthQuake> bblist){
+34: 	JSONObject json=new JSONObject();  // { }
+35: 	JSONArray jarray=new JSONArray();  // [ ]
+36: 	for (int i = 0; i < bblist.size(); i++) {
+37: 		String ss=pair(bblist.get(i)); // "keyi":"valuei"
+38: 		jarray.put(ss);                // [{"keyi":"valuei"}]
+39: 	}
+40: 	json.put("loc", jarray);   // {"loc": [{"keyi":"valuei"}, {...}]}
+41: 	return json;
+42:  }
+43:  public static void printToJSON(List<KREarthQuake> bblist, String fname){
+44: 	try (PrintWriter pw=new PrintWriter(new FileWriter(fname,false),true)){
+45: 		pw.println("{\"loc\": [");
+46: 		for(int i=0; i<bblist.size()-1 ;i++){
+47: 			KREarthQuake bb=bblist.get(i);
+48: 			pw.println(pair(bb)+",");
+49: 		}
+50: 		pw.println(pair(bblist.get(bblist.size()-1 )));
+51: 		pw.println("]}");
+52: 	} catch (IOException e) {
+53: 	    System.out.println(e);
+54: 	}
+55:  }
+56: }

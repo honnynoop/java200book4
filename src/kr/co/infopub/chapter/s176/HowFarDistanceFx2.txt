@@ -1,0 +1,142 @@
+001: package kr.co.infopub.chapter.s176;
+002: import java.io.BufferedReader;
+003: import java.io.BufferedWriter;
+004: import java.io.File;
+005: import java.io.FileReader;
+006: import java.io.FileWriter;
+007: import java.io.IOException;
+008: import java.net.URL;
+009: import java.util.Date;
+010: import org.json.simple.JSONValue;
+011: import javafx.application.Application;
+012: import javafx.application.Platform;
+013: import javafx.beans.value.ChangeListener;
+014: import javafx.beans.value.ObservableValue;
+015: import javafx.concurrent.Worker.State;
+016: import javafx.event.ActionEvent;
+017: import javafx.event.EventHandler;
+018: import javafx.geometry.Insets;
+019: import javafx.geometry.Pos;
+020: import javafx.scene.Scene;
+021: import javafx.scene.control.Button;
+022: import javafx.scene.layout.HBox;
+023: import javafx.scene.layout.VBox;
+024: import javafx.scene.web.WebEngine;
+025: import javafx.scene.web.WebView;
+026: import javafx.stage.FileChooser;
+027: import javafx.stage.Stage;
+028: import netscape.javascript.JSObject;
+029: 
+030: public class HowFarDistanceFx2 extends Application {
+031:  public static void main(String[] args) {
+032:     launch(args);
+033:  }
+034:  JavaApplication app;   // JS가 JAVA 메서드 호출가능
+035:  @Override
+036:  public void start(Stage stage) {
+037: 	stage.setTitle("얼마나 걸었어?");
+038: 	WebView webView = new WebView();
+039:     WebEngine webEngine = webView.getEngine();
+040:     URL url = getClass().getResource("geo.html");
+041:     //웹호출
+042:     webEngine.load(url.toExternalForm());
+043:     //자바와 웹 브라우저 접근 가능
+044:     app=new JavaApplication(stage);
+045:     webEngine.getLoadWorker().stateProperty().addListener(
+046: 	    new ChangeListener<State>(){
+047: 	      @Override
+048: 	      public void changed(ObservableValue<? extends State> ov, State oldState, State newState) {
+049: 	      	System.out.println("------state-----------------------------------"+newState);
+050: 	          if(newState == State.SUCCEEDED){
+051: 	          	JSObject window = (JSObject) webEngine.executeScript("window");
+052: 	              window.setMember("app", app);  //app이름으로 호출할 JS
+053: 	          }
+054: 	      }
+055: 	    });
+056:     VBox root = new VBox(10);      // 수직으로 붙이기
+057:     HBox hbox = new HBox(10);      // 수평으로 붙이기
+058:     hbox.setPadding(new Insets(5));
+059:     hbox.setAlignment(Pos.CENTER);
+060:     // Exit 버튼
+061:     Button btnExit = new Button("Exit");
+062:     btnExit.setOnAction(e -> {
+063:         Platform.exit();
+064:     });
+065:     // About 버튼
+066:     Button btnAbout = new Button("About");
+067:     // 자바에서 스크립트로 전달
+068:     btnAbout.setOnAction(new EventHandler<ActionEvent>(){
+069:         @Override
+070:         public void handle(ActionEvent arg0) {
+071:         	webEngine.executeScript( " updateMessage(' " + stage.getTitle()+" "+new Date() + " ') " );
+072:         }
+073:     });
+074:     // Clear 버튼
+075:     Button btnClear = new Button("Clear");
+076:     // 자바에서 스크립트로 전달
+077:     btnClear.setOnAction(new EventHandler<ActionEvent>(){
+078:         @Override
+079:         public void handle(ActionEvent arg0) {
+080:         	webEngine.executeScript( "clearMessage()" );
+081:         }
+082:     });
+083:     // ReadFx 버튼
+084:     Button btnReadFx = new Button("ReadFx");
+085:     btnReadFx.setOnAction(new EventHandler<ActionEvent>(){	
+086:         @Override
+087:         public void handle(ActionEvent arg0) {
+088:         	FileChooser fileChooser = new FileChooser();
+089:             File file = fileChooser.showOpenDialog(stage);
+090:             try (BufferedReader reader = new BufferedReader(new FileReader(file))){
+091:                 Object obj = JSONValue.parse(reader);
+092:                 webEngine.executeScript("drawLine(" + obj + ")");
+093:                 System.out.println("read------------------------------------->"+file.getAbsolutePath());
+094:                 HowFarDistance2 howfarw=new HowFarDistance2(); //json
+095:                 //거리 구하기
+096:                 howfarw.makeDistances(file.getAbsolutePath());
+097:                 double dd=howfarw.howfar();
+098:                 webEngine.executeScript( " updateMessage(' " + "You walk "+dd+" Km." + " ') " );
+099:             } catch (Exception ex) {
+100:                System.out.println("read----Exception--------------------------------->"+ex);
+101:                webEngine.executeScript( "clearMessage() " );
+102:             }
+103:         }
+104:     });
+105:     // Refresh 버튼
+106:     // refresh 버튼을 생성하고 이벤트를 등록한다.
+107:     Button refresh = new Button("Refresh");
+108:     refresh.setOnAction(new EventHandler<ActionEvent>(){
+109:         @Override
+110:         public void handle(ActionEvent arg0) {	
+111:          webEngine.load(url.toExternalForm());
+112:          JSObject window = (JSObject) webEngine.executeScript("window");
+113:          window.setMember("app", app= new JavaApplication(stage));
+114:         }
+115:     });
+116:     // hbox에 여러 버튼을 옆으로 붙인다.
+117:     hbox.getChildren().addAll(btnAbout,btnClear,btnReadFx,refresh,btnExit);
+118:     // 수직 vbox에 웹뷰를 붙이고 여러 버튼을 붙인 hbox를 아래로 붙인다.
+119:     root.getChildren().addAll(webView, hbox);
+120:     Scene scene = new Scene(root, 600, 300);
+121:     stage.setScene(scene);
+122:     stage.show();
+123: }
+124:  // 웹엔진에서 자바스크립트가 자바를 접근할 때 필요
+125:  // 자바스크립트의 이벤트가 자바의 메서드를 호출한다.
+126:  public class JavaApplication {        // 내부 클래스 -> 멤버처름 객체 생성해서 사용
+127:   Stage stage;
+128:   public JavaApplication(Stage stage){
+129: 	this.stage=stage;
+130:   }
+131:   public void saveJSToJavaFxFile(String msg) {
+132: 	System.out.println("--------------------------->"+msg);
+133: 	FileChooser fileChooser = new FileChooser();
+134:     File file = fileChooser.showSaveDialog(this.stage);
+135:     try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+136:         writer.write(msg);
+137:     } catch (IOException ex) {
+138:     	System.out.println("------------------------>"+ex);
+139:     }
+140:   }
+141:  }
+142: }

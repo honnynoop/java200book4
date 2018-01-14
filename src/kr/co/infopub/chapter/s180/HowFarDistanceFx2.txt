@@ -1,0 +1,217 @@
+001: package kr.co.infopub.chapter.s180;
+002: 
+003: import java.io.BufferedReader;
+004: import java.io.BufferedWriter;
+005: import java.io.File;
+006: import java.io.FileReader;
+007: import java.io.FileWriter;
+008: import java.io.IOException;
+009: import java.net.URL;
+010: import java.text.SimpleDateFormat;
+011: import java.util.Date;
+012: 
+013: import org.json.simple.JSONValue;
+014: 
+015: import javafx.application.Application;
+016: import javafx.application.Platform;
+017: import javafx.concurrent.Worker.State;
+018: import javafx.event.ActionEvent;
+019: import javafx.event.EventHandler;
+020: import javafx.geometry.Insets;
+021: import javafx.geometry.Pos;
+022: import javafx.scene.Scene;
+023: import javafx.scene.control.Button;
+024: import javafx.scene.layout.HBox;
+025: import javafx.scene.layout.VBox;
+026: import javafx.scene.web.WebEngine;
+027: import javafx.scene.web.WebView;
+028: import javafx.stage.FileChooser;
+029: import javafx.stage.Stage;
+030: 
+031: import netscape.javascript.JSObject;
+032: 
+033: public class HowFarDistanceFx2 extends Application {
+034:  public static void main(String[] args) {
+035:         launch(args);
+036:  }
+037: JavaApplication app;
+038: @Override
+039: public void start(Stage stage) {
+040: 	
+041: 	stage.setTitle("World EarthQuakes");
+042: 	
+043: 	WebView webView = new WebView();
+044:     WebEngine webEngine = webView.getEngine();
+045:     URL url = getClass().getResource("geonew3.html");
+046:     //웹호출
+047:     webEngine.load(url.toExternalForm());
+048:     app=new JavaApplication(stage);
+049:     
+050: //        webEngine.getLoadWorker().stateProperty().addListener(
+051: //                new ChangeListener<State>(){
+052: //                     
+053: //                    @Override
+054: //                    public void changed(ObservableValue<? extends State> ov, State oldState, State newState) {
+055: //                    	System.out.println("------state-----------------------------------"+newState);
+056: //                        if(newState == State.SUCCEEDED){
+057: //                        	JSObject window = (JSObject) webEngine.executeScript("window");
+058: //                            window.setMember("app", app);  //app이름으로 호출할 JS
+059: //                        }
+060: //                    }
+061: //                });
+062:      webEngine.getLoadWorker().stateProperty().addListener(
+063:         (ov,  oldState,  newState) ->{
+064:                 System.out.println("------state-----------------------------------"+newState);
+065:                 if(newState == State.SUCCEEDED){
+066:                 	JSObject window = (JSObject) webEngine.executeScript("window");
+067:                     window.setMember("app", app);  //app이름으로 호출할 JS
+068:                 }
+069:             });
+070:     //세팅준비
+071: //        webEngine.load(url.toExternalForm());
+072: //        JSObject window = (JSObject) webEngine.executeScript("window");
+073: //        window.setMember("app", new JavaApplication(stage));    
+074: 
+075:     
+076:     VBox root = new VBox(10);
+077:     HBox hbox = new HBox(10);
+078:     hbox.setPadding(new Insets(5));
+079:     hbox.setAlignment(Pos.CENTER);
+080:    
+081:     
+082:     Button btnExit = new Button("Exit");
+083:     btnExit.setOnAction(e -> {
+084:         Platform.exit();
+085:     });
+086:     
+087:     Button btnAbout = new Button("WebData");
+088:     //자바에서 스크립트로 전달
+089:     btnAbout.setOnAction(new EventHandler<ActionEvent>(){
+090:         @Override
+091:         public void handle(ActionEvent arg0) {
+092:         	Object obj=getJson();
+093:             webEngine.executeScript("drawLine(" + obj+ ")");
+094:         }
+095:     });
+096:     
+097:     Button btn2017 = new Button("Web2017");
+098:     //자바에서 스크립트로 전달
+099:     btn2017.setOnAction(new EventHandler<ActionEvent>(){
+100:         @Override
+101:         public void handle(ActionEvent arg0) {
+102:         	Object obj=getJson("2017","2017");
+103:             webEngine.executeScript("drawLine(" + obj+ ")");
+104:         }
+105:     });
+106:     Button btn2016 = new Button("Web2016");
+107:     //자바에서 스크립트로 전달
+108:     btn2016.setOnAction(new EventHandler<ActionEvent>(){
+109:         @Override
+110:         public void handle(ActionEvent arg0) {
+111:         	Object obj=getJson("2016","2016");
+112:             webEngine.executeScript("drawLine(" + obj+ ")");
+113:         }
+114:     });
+115:     Button btn2015 = new Button("Web2015");
+116:     //자바에서 스크립트로 전달
+117:     btn2015.setOnAction(new EventHandler<ActionEvent>(){
+118:         @Override
+119:         public void handle(ActionEvent arg0) {
+120:         	Object obj=getJson("2015","2015");
+121:             webEngine.executeScript("drawLine(" + obj+ ")");
+122:         }
+123:     });
+124:     Button btn2014 = new Button("Web2014");
+125:     //자바에서 스크립트로 전달
+126:     btn2014.setOnAction(new EventHandler<ActionEvent>(){
+127:         @Override
+128:         public void handle(ActionEvent arg0) {
+129:         	Object obj=getJson("2014","2014");
+130:             webEngine.executeScript("drawLine(" + obj+ ")");
+131:         }
+132:     });
+133:     Button btnReadFx = new Button("ReadFx");
+134:     btnReadFx.setOnAction(new EventHandler<ActionEvent>(){
+135:     	
+136:         @Override
+137:         public void handle(ActionEvent arg0) {
+138:         	FileChooser fileChooser = new FileChooser();
+139:             File file = fileChooser.showOpenDialog(stage);
+140:            
+141:             try (BufferedReader reader = new BufferedReader(new FileReader(file))){
+142:                 Object obj = JSONValue.parse(reader);
+143:                 //json을 자바스트립트에 넝어서 라인을 그림
+144:                 System.out.println(obj);
+145:                 webEngine.executeScript("drawLine(" + obj + ")");
+146:                 System.out.println("read------------------------------------->"+file.getAbsolutePath());
+147:                 //거리 구하기
+148:                 //HowFarDistance2 howfarw=new HowFarDistance2(); //json
+149:                 //howfarw.makeDistances(file.getAbsolutePath());
+150:                 //double dd=howfarw.howfar();
+151:                 
+152:                 //webEngine.executeScript( " updateMessage(' " + "You walk "+dd+" Km." + " ') " );
+153:             } catch (Exception ex) {
+154:                System.out.println("read----Exception--------------------------------->"+ex);
+155:               // webEngine.executeScript( "clearMessage() " );
+156:             }
+157:         }
+158:     });
+159:     
+160:     Button Refresh = new Button("Refresh");
+161:     Refresh.setOnAction(new EventHandler<ActionEvent>(){
+162:         @Override
+163:         public void handle(ActionEvent arg0) {	
+164:          webEngine.load(url.toExternalForm());
+165:          JSObject window = (JSObject) webEngine.executeScript("window");
+166:          window.setMember("app", app= new JavaApplication(stage));
+167:         }
+168:     });
+169:     
+170:     hbox.getChildren().addAll(btnAbout,btn2017,btn2016,btn2015,btn2014,btnReadFx,Refresh,btnExit);
+171:     root.getChildren().addAll(webView, hbox);
+172:     //Scene scene = new Scene(root, 1300, 650); //600,600
+173:     Scene scene = new Scene(root, 1220, 720);
+174:     stage.setScene(scene);
+175:     stage.show();
+176: }
+177:  public static Object getJson(){
+178: 	return getJson("2010");
+179:  }
+180:  public static Object getJson(String fyear){
+181: 	return getJson(fyear, todate2(new Date()));
+182:  }
+183:  public static Object getJson(String fyear,String tyear){
+184: 	EarthRequest rfw=new EarthRequest();
+185: 	rfw.earthrequests(tyear);
+186: 	Object obj = JSONValue.parse(GeoPrint2.toJson2(rfw.getEarthquakes()));
+187: 	return obj;
+188:  }
+189: public static String todate2(Date dd){
+190: 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy");
+191: 	return sdf.format(dd);
+192: }
+193: public static String para(String key, String value){
+194: 	return String .format("%s=%s",key,value);
+195: }
+196: /**
+197:  * 웹엔진에서 호출할 자바스크립ㅌ
+198:  */
+199: public class JavaApplication {
+200:    
+201: 	Stage stage;
+202: 	public JavaApplication(Stage stage){
+203: 		this.stage=stage;
+204: 		
+205: 	}
+206:     public void saveJSToJavaFxFile(String msg) {
+207:     	System.out.println("-------------------------------->"+msg);
+208:     	FileChooser fileChooser = new FileChooser();
+209:         File file = fileChooser.showSaveDialog(this.stage);
+210:         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+211:             writer.write(msg);
+212:         } catch (IOException ex) {
+213:         	System.out.println("-------------------------------->"+ex);
+214:         }
+215:     }
+216: }
+217: }

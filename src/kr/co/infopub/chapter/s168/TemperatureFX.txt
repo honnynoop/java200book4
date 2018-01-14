@@ -1,0 +1,20 @@
+01: <?xml version="1.0" encoding="UTF-8"?>
+02: 
+03: <?import javafx.scene.control.*?>
+04: <?import java.lang.*?>
+05: <?import javafx.scene.layout.*?>
+06: <?import javafx.scene.layout.BorderPane?>
+07: 
+08: <BorderPane prefHeight="500" prefWidth="508.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kr.co.infopub.chapter.s168.TemperatureFXController">
+09:    <center>
+10:       <AnchorPane blendMode="DARKEN" focusTraversable="true" prefHeight="500" prefWidth="383.0" BorderPane.alignment="CENTER">
+11:          <children>
+12:             <Slider fx:id="cdegree" blendMode="DARKEN" blockIncrement="1.0" layoutX="67.0" layoutY="95.0" majorTickUnit="10.0" minorTickCount="5" orientation="VERTICAL" prefHeight="412.0" prefWidth="69.0" showTickLabels="true" showTickMarks="true" />
+13:             <Slider fx:id="fdegree" blockIncrement="2.0" layoutX="357.0" layoutY="95.0" majorTickUnit="10.0" max="212.0" min="32.0" minorTickCount="5" orientation="VERTICAL" prefHeight="412.0" prefWidth="69.0" showTickLabels="true" showTickMarks="true" />
+14:             <Label layoutX="79.0" layoutY="52.0" text="?„­?”¨" />
+15:             <Label layoutX="368.0" layoutY="52.0" text="?™”?”¨" />
+16:             <Label fx:id="lbdegree" alignment="CENTER" contentDisplay="CENTER" layoutX="129.0" layoutY="468.0" prefHeight="62.0" prefWidth="212.0" text="?„­?”¨  ?„  ?™”?”¨  ?„     " />
+17:          </children>
+18:       </AnchorPane>
+19:    </center>
+20: </BorderPane>

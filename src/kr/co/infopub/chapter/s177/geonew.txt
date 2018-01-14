@@ -1,0 +1,378 @@
+001: <!DOCTYPE html>
+002: <html>
+003: <head>
+004: <title>How Far You Work</title>
+005: <meta charset="EUC-KR">
+006: <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+007: <style type="text/css">
+008: html {
+009: 	height: 100%
+010: }
+011: body {
+012: 	height: 100%;
+013: 	margin: 0px;
+014: 	padding: 0px;
+015: 	font-size: 9pt;
+016: }
+017: div {
+018: 	float: left;
+019: }
+020: #map_canvas {
+021: 	width: 600px;
+022: 	height: 650px
+023: }
+024: #control {
+025: 	
+026: }
+027: input {
+028: 	font-size: 9pt;
+029: }
+030: </style>
+031: <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRGWxNf_xpelvyX6KKXfrzb1PI_Deq8T4"></script>
+032: <script type="text/javascript">
+033: 	function updateMessage(msg){
+034: 	  document.getElementById("resultMessage").innerHTML=msg;
+035: 	  document.getElementById("myresult").innerHTML="<h3>"+msg+"</h3>"; 
+036: 	};
+037: 	function clearMessage(){
+038: 	  document.getElementById("resultMessage").innerHTML="";
+039: 	  document.getElementById("myresult").innerHTML="";
+040: 	};
+041: 	function howfarFX(){
+042: 	  //javafx에 html에서 얻은 좌표를 넣어줌
+043: 	  app.saveJSToJavaFxFile(document.getElementById("_location").value);
+044: 	};
+045: 	function pass(){
+046: 	    document.getElementById("_location").value="{\"loc\":"+JSON.stringify(tripArray)+"}";
+047: 	};
+048: 	function calculateFX(){
+049: 		app.calculate(document.getElementById("_location").value);
+050: 	}
+051: 	function drawLine(msg){
+052: 	     labelIndex = 0;
+053: 	  	 marklist = new Array();
+054: 		 lats = new Array();  // 위도 경도 저장용
+055: 		 lngs = new Array();
+056: 		 linelist = new Array();  // 선 리스트 저장
+057: 		 lineIndex = 0;  // 몇번째 선인지.
+058: 		 tripArray = new Array();
+059: 		 
+060: 		 tripArray=msg.loc;
+061: 		 initialize(tripArray[0].markerX,tripArray[0].markerY);
+062: 		 renewindex = tripArray.length;
+063: 		 renew(renewindex);
+064: 	};
+065: 
+066: 	var globalMap;
+067: 	var globalMarker;
+068: 	var globalGeocoder;
+069: 	var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+070: 	var labelIndex = 0;
+071: 	// 마커 저장용
+072:   	var marklist = new Array();
+073: 	// 선 저장용
+074: 	var lats = new Array();  // 위도 경도 저장용
+075: 	var lngs = new Array();
+076: 	var linelist = new Array();  // 선 리스트 저장
+077: 	var lineIndex = 0;  // 몇번째 선인지.
+078:     var tripArray = new Array();
+079: 	// 맵 초기화
+080: 	function initialize(x, y) {
+081: 		// 입력된 좌표가 없으면 기본좌표를 역삼동으로 설정.
+082: 		if (x == 0) {
+083: 			x = 37.50075507977441;
+084: 		}
+085: 		if (y == 0) {
+086: 			y = 127.03690767288208;
+087: 		}
+088: 		globalGeocoder = new google.maps.Geocoder();
+089: 		var latlng = new google.maps.LatLng(x, y);
+090: 		var myOptions = {
+091: 			zoom : 16,
+092: 			//disableDoubleClickZoom:false,
+093: 			center : latlng,
+094: 			navigationControl : false, // 눈금자 형태로 스케일 조절하는 컨트롤 활성화 선택.
+095: 			navigationControlOptions : {
+096: 				position : google.maps.ControlPosition.TOP_RIGHT,
+097: 				style : google.maps.NavigationControlStyle.DEFAULT
+098: 			// ANDROID, DEFAULT, SMALL, ZOOM_PAN
+099: 			},
+100: 			streetViewControl : false,
+101: 			scaleControl : false, // 지도 축적 보여줄 것인지.
+102: 			mapTypeControl : false, // 지도,위성,하이브리드 등등 선택 컨트롤 보여줄 것인지
+103: 			mapTypeId : google.maps.MapTypeId.ROADMAP
+104: 		// HYBRID, ROADMAP, SATELLITE, TERRAIN
+105: 		};
+106: 		globalMap = new google.maps.Map(document.getElementById("map_canvas"),
+107: 				myOptions);
+108: 		google.maps.event.addListener(globalMap, 'click', function(event) { // 지도클릭시 마커이동
+109: 			moveMarker(event.latLng);
+110: 		});
+111: 	}
+112: 	// 맵 중앙에 마크찍기
+113: 	function setMark() {
+114:       var myOptions = {
+115:          position : globalMap.getCenter(),
+116:          draggable : true,
+117:          label : {
+118:             text : labels[labelIndex++ % labels.length],
+119:             color : 'black',
+120:             fontSize : '32px'
+121:          },
+122:          map : globalMap,
+123:          visible : true
+124:       };
+125:       document.getElementById("marknum").innerHTML = labelIndex;
+126:       document.getElementById("marknum").value = labelIndex;
+127:       globalMarker = new google.maps.Marker(myOptions);
+128:       getMarkPos();
+129:       google.maps.event.addListener(globalMarker, 'dragend', function(event) {
+130:          getMarkPos();
+131:          if(labelIndex > 1){
+132:             markLine (lats[labelIndex], lngs[labelIndex], lats[labelIndex-1], lngs[labelIndex-1]);
+133:             // alert(lineIndex);
+134:             linelist[lineIndex-2].setVisible(false);
+135:           }
+136:       });
+137:       marklist.push(globalMarker);
+138:       
+139:       // 선긋기에 필요한 if
+140:       if(labelIndex > 1){
+141:          markLine (lats[labelIndex], lngs[labelIndex], lats[labelIndex-1], lngs[labelIndex-1]);
+142:        }
+143:     }
+144:     function renew(index){
+145: 		// JSON 위도 경도에 따라 마크 찍는거 해야된다!
+146: 		for(i=0; i<index; i++){
+147: 			var latlng = new google.maps.LatLng(tripArray[i].markerX, tripArray[i].markerY);
+148: 			var myOptions = {
+149: 					position : latlng,
+150: 					draggable : true,
+151: 					map : globalMap,
+152: 					id : i,
+153: 					visible : true
+154: 				};
+155: 			marklist[i] = new google.maps.Marker(myOptions);
+156: 			document.getElementById("marknum").value = i;
+157: 			
+158: 			getSelectMarkPos(i);
+159: 			//markEvent(i);
+160: 		}
+161: 		// 마크 배열들을 다시 재조정한 뒤 선을 찍어야한다.
+162: 		markLinee();
+163: 	}
+164: 	function getSelectMarkPos(Index) {
+165: 		var pos = marklist[Index].getPosition();
+166: 		document.getElementById("markerX").value = pos.lat();
+167: 		document.getElementById("markerY").value = pos.lng();
+168: 	}
+169: 	function markLinee() {
+170: 		if(tripArray.length <1){
+171: 			return;
+172: 		}
+173: 		// JSON의 길이만큼 함수가 돈다
+174: 		for (i = 1; i <= tripArray.length-1; i++) {
+175: 			// 이제 JSON 객체에서 가져 올 것이니 나중에 이 변수들 다 삭제 (완료?)
+176: 			var line = new google.maps.Polyline({
+177: 				path : [ new google.maps.LatLng(tripArray[i-1].markerX, tripArray[i-1].markerY), 
+178: 						new google.maps.LatLng(tripArray[i].markerX, tripArray[i].markerY) ], 
+179: 				strokeColor : "#FF0000",
+180: 				strokeOpacity : 1.0, // 진하기
+181: 				strokeWeight : 4.0, // 굵기
+182: 				geodesic : true,
+183: 				icons : [ {
+184: 					icon : {
+185: 						path : google.maps.SymbolPath.FORWARD_OPEN_ARROW
+186: 					},
+187: 					offset : '50%'
+188: 				} ],
+189: 				map : globalMap
+190: 			});
+191: 
+192: 			linelist.push(line);
+193: 		}
+194: 		lineIndex++;
+195: 	}
+196: 	// 마크 삭제하기
+197: 	function removeMark() {
+198: 		globalMarker.setOptions({
+199: 			map : null,
+200: 			visible : false
+201: 		});
+202: 		globalMarker = null;
+203: 	}
+204: 	// 마크좌표 가져오기
+205: 	function getMarkPos() {
+206: 		var pos = globalMarker.getPosition();
+207: 
+208: 		document.getElementById("markerX").value = pos.lat();
+209: 		document.getElementById("markerY").value = pos.lng();
+210: 		
+211: 		lats[labelIndex] = pos.lat();
+212: 		lngs[labelIndex] = pos.lng();
+213: 	}
+214: 	// 특정좌표로 이동하기
+215: 	function setMapByCoord(x, y) {
+216: 		var loc = new google.maps.LatLng(x, y);
+217: 
+218: 		globalMap.setCenter(loc);
+219: 	}
+220: 	// 주소값으로 찾기
+221: 	function codeAddress() {
+222: 		var address = document.getElementById("address").value;
+223: 		if (address == '검색할 주소를 입력하십시오.' || address == '') {
+224: 			alert('검색할 주소를 입력하십시오.');
+225: 			document.getElementById("address").value = '';
+226: 			document.getElementById("address").focus();
+227: 			return;
+228: 		}
+229: 
+230: 		globalGeocoder.geocode({
+231: 			'address' : address
+232: 		}, function(results, status) {
+233: 			if (status == google.maps.GeocoderStatus.OK) {
+234: 				globalMap.setCenter(results[0].geometry.location);
+235: 
+236: 				globalMarker = new google.maps.Marker({
+237: 					label : labels[labelIndex++ % labels.length],
+238: 					map : globalMap,
+239: 					position : results[0].geometry.location,
+240: 					draggable : true
+241: 				});
+242: 				
+243: 				document.getElementById("marknum").innerHTML = labelIndex;
+244: 				
+245: 				getMarkPos();
+246: 
+247: 				google.maps.event.addListener(globalMarker, 'drag', function(
+248: 						event) {
+249: 					getMarkPos();
+250: 				});
+251: 
+252: 			} else {
+253: 				alert("Geocode was not successful for the following reason: "
+254: 						+ status);
+255: 			}
+256: 		});
+257: 	}
+258: 	// 마커 간 선긋기
+259:     function markLine(x2, y2, x1, y1) {
+260:        var line = new google.maps.Polyline({
+261:           path : [ new google.maps.LatLng(x1, y1), new google.maps.LatLng(x2, y2) ],
+262:           strokeColor : "#FF0000",
+263:           strokeOpacity : 0.7,  // 진하기
+264:           strokeWeight : 6,   // 굵기
+265:           geodesic : true,
+266:           icons: [{
+267:                 icon: {path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW},
+268:                  offset: '100%'
+269:              }],
+270:           map : globalMap
+271:        });
+272:        
+273:        linelist.push(line);
+274:        lineIndex++;
+275:     }
+276: 	// 지도 위의 마크 모두 삭제 - Refresh 말고 방법 없을까?
+277: 	function clearMark() {
+278: 		var loc = globalMap.getCenter(); // 현재의 지도의 위치를 가져온다.
+279: 
+280: 		globalMap = null;
+281: 		globalMarker = null;
+282: 		globalGeocoder = null;
+283: 		
+284: 	 labelIndex = 0;
+285:   	 marklist = new Array();
+286: 	 lats = new Array();  // 위도 경도 저장용
+287: 	 lngs = new Array();
+288: 	 linelist = new Array();  // 선 리스트 저장
+289: 	 lineIndex = 0;  // 몇번째 선인지.
+290: 	 tripArray = new Array();
+291: 		initialize(loc.lat(), loc.lng());
+292: 	}
+293: 	// 지도 클릭시 마커 이동
+294:    function moveMarker(loc) {
+295:       //alert(loc);
+296:       globalMarker.setPosition(loc);
+297:       getMarkPos();
+298:       if(labelIndex > 1){
+299:          markLine (lats[labelIndex], lngs[labelIndex], lats[labelIndex-1], lngs[labelIndex-1]);
+300:          alert(lineIndex);
+301:          linelist[lineIndex-2].setVisible(false);
+302:        }
+303:    }
+304: 	function toQ(msg){
+305: 		return "\""+msg+"\"";
+306: 	}
+307: 	function toR(key, value){
+308: 		return toQ(key)+":"+toQ(value);
+309: 	}
+310: 	function toS(msg){
+311: 		return "{"+msg+"}";
+312: 	}
+313: 	// 배열에 저장
+314: 	function saveMarker(){
+315: 		alert("labelIndex"+labelIndex);
+316: 		var tripInfo = new Object();
+317: 		tripInfo.marknum = document.getElementById("marknum").value;
+318: 		tripInfo.markerX = document.getElementById("markerX").value;
+319: 		tripInfo.markerY = document.getElementById("markerY").value;
+320: 		tripArray.push(tripInfo);//JSON.stringify 하지마시오
+321: 	}
+322: </script>
+323: </head>
+324: <body onload="initialize(0,0)">
+325: <div id="map_canvas"></div>
+326: <form name="frmForm" id="_frmForm" method="post" action="geoaddd.do">
+327: <div id="control" align="left">
+328: <dl>
+329: <dd>
+330: 	<input type="text" id="address" name="address" value="주소 입력"
+331: 		style="width: 210px;" onClick="this.value='';"> <input
+332: 		type="button" value="GeoCode" onClick="codeAddress()">
+333: </dd>
+334: <dd>
+335: 	<hr />
+336: </dd>
+337: <dd>
+338: 	<input type="button" value="마크생성" onClick="setMark();"> <input
+339: 		type="button" value="마크삭제" onClick="removeMark();">
+340: </dd>
+341: <dd>
+342: 	<input type="button" value="마크좌표 보기" onClick="getMarkPos();">
+343: 	<br> <span style="margin-left: 80px;"> 마크X좌표: <input
+344: 		type="text" name="markerX" id="markerX"></span> <br> <span
+345: 		style="margin-left: 80px;"> 마크Y좌표: <input type="text"
+346: 		name="markerY" id="markerY"></span>
+347: </dd>
+348: <dd>
+349: 	<input type="button" value="지도 위의 마크 모두 삭제" onClick="clearMark();">
+350: </dd>
+351: 
+352: <dd>
+353: 	<hr />
+354: </dd>
+355: <dd>
+356: 	<input type="hidden" id="marknum" name="marknum" value="0">
+357: 	<br /> 
+358: 	<input type="button" onclick='javascript:saveMarker();' value="마크 저장">
+359: 	<input type="button" onclick='javascript:pass();' value="값 넘기기">
+360: 	<hr />
+361: </dd>
+362: <dd>
+363: 	<div id="myresult"></div>
+364: </dd>
+365: <dd>
+366: 	<input type="button" value="JS to Label" onclick='javascript:howfarFX();'>
+367: </dd>
+368: <dd>
+369: 	<textarea rows="10" cols="80" name='location' id="_location"></textarea>
+370: </dd>
+371: <dd>
+372: 	<div id="resultMessage" ></div>
+373: </dd>
+374: </dl>
+375: </div>
+376: </form>
+377: </body>
+378: </html>

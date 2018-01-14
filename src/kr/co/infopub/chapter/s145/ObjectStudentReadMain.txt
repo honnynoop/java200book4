@@ -1,0 +1,13 @@
+01: package kr.co.infopub.chapter.s145;
+02: import java.io.IOException;
+03: import java.util.Vector;
+04: public class ObjectStudentReadMain {
+05: 	public static void main(String[] args) {
+06: 		ObjectStudentRWG<Student> osw=new ObjectStudentRWG<Student>();
+07: 		try {
+08: 			osw.read("kisul\\stu.txt");
+09: 		} catch (IOException e) {
+10: 			System.out.println(e);
+11: 		}
+12: 	}
+13: }

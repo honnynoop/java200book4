@@ -1,0 +1,32 @@
+01: package kr.co.infopub.chapter.s153;
+02: import java.util.Scanner;
+03: // if 조건문 -> 1이면 USD로 2면 JPY, 3이면 CNY 1,2,3외의 다른수는 환전불가능
+04: public class ExchangeRate {
+05: 	public static void main(String[] args) {
+06: 		double USD=1113.00;    //변수값
+07: 		double JPY=10.0624;    //변수값 
+08: 		double CNY=164.1020;   //변수값 
+09: 		double krw=1000000;    //백만원 -환전하려고 하는 금액
+10: 		
+11: 		System.out.println("USD로 환전하려면 1, JPY로 환전하려면 2, CNY로 환전 하려면 3을 입력하세요.");
+12: 		Scanner scann=new Scanner(System.in);//키보드
+13: 		int choice=scann.nextInt();//키보드로 정수 입력
+14: 		double result=0.0; //변수 선언
+15: 		if(choice==1){
+16: 			result=calculate(krw,USD);   
+17: 			System.out.printf("한화 %.2f원은  %.2f달러입니다.\n",krw,result);
+18: 		}else if(choice==2){
+19: 			result=calculate(krw,JPY);
+20: 			System.out.printf("한화 %.2f원은  %.2f엔 입니다.\n",krw,result);
+21: 		}else if(choice==3){
+22: 			result=calculate(krw,CNY);
+23: 			System.out.printf("한화 %.2f원은 %.2f위안 입니다.\n",krw,result);
+24: 		}else{
+25: 			System.out.println("환전할 수 없습니다.");
+26: 		}
+27: 	}
+28: 	// 나누는 행위를 반복 -> 메서드로 만든다.
+29: 	public static double calculate(double krwMoney, double exchangeRatio){
+30: 		return krwMoney/exchangeRatio;
+31: 	}
+32: }

@@ -1,0 +1,24 @@
+01: package kr.co.infopub.chapter.s155;
+02: public class ExchangeRate {
+03: 	public static void main(String[] args) {
+04: 		// 환율정보를 객체에 저장
+05: 		FixerRate finance =new FixerRate();
+06: 		finance.base="USD";
+07: 		finance.date="2017-06-08";
+08: 		finance.usd=1;
+09: 		finance.jpy=110.22;
+10: 		finance.cny=6.7978;
+11: 		finance.krw=1123.3;
+12: 		finance.eur=0.89055;
+13: 		System.out.println( finance);
+14: 		//환율정보를 이용하여 계산
+15: 		double krw=1000000;
+16: 		double ratio=finance.krw;
+17: 		double result=ExchangeRate.calculate(krw,ratio);
+18: 		System.out.printf("%.2fKRW은 %.2f%s입니다.\n",krw, result,finance.base);
+19: 	}
+20: 	//나누는 행위를 반복 -> 메서드로 만든다.
+21: 	public static double calculate(double krwMoney, double exchangeRatio){
+22: 		return krwMoney/exchangeRatio;
+23: 	}
+24: }

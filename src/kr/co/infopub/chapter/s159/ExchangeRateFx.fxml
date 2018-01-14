@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.Group?>
+
+<BorderPane prefHeight="347.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kr.co.infopub.chapter.s159.ExchangeRateFxController">
+   <right>
+      <AnchorPane prefHeight="347.0" prefWidth="754.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <children>
+            <Label fx:id="lbfrom" layoutX="251.0" layoutY="216.0" text="KRW" AnchorPane.leftAnchor="251.0">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tffrom" layoutX="18.0" layoutY="212.0" prefHeight="29.0" prefWidth="208.0" promptText="환전하려는 금액" AnchorPane.leftAnchor="18.0" />
+            <ComboBox fx:id="cbfinance" layoutX="312.0" layoutY="212.0" onAction="#cbdistanceOnAction" prefHeight="29.0" prefWidth="97.0" promptText="국가" AnchorPane.leftAnchor="312.0" />
+            <TextField fx:id="tfusd" editable="false" layoutX="32.0" layoutY="130.0" prefHeight="30.0" prefWidth="160.0" promptText="USD" AnchorPane.leftAnchor="20.0" />
+            <Label fx:id="lbboard" alignment="CENTER" layoutX="20.0" layoutY="35.0" prefHeight="28.0" prefWidth="520.0" text="환율 상황" AnchorPane.leftAnchor="20.0">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="95.0" layoutY="79.0" text="1 USD" AnchorPane.leftAnchor="95.0">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfjpy" editable="false" layoutX="270.0" layoutY="130.0" prefHeight="30.0" prefWidth="160.0" promptText="JPY" />
+            <TextField fx:id="tfcny" editable="false" layoutX="535.0" layoutY="131.0" prefHeight="30.0" prefWidth="160.0" promptText="CNY" AnchorPane.rightAnchor="59.0" />
+            <Label layoutX="343.0" layoutY="79.0" text="1 JPY" AnchorPane.leftAnchor="343.0">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="610.0" layoutY="79.0" text="1 CNY">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Button fx:id="btncon" layoutX="589.0" layoutY="34.0" mnemonicParsing="false" onAction="#onConvertAction" prefHeight="29.0" prefWidth="137.0" text="현재환율" />
+            <TextField fx:id="tfto" layoutX="436.0" layoutY="212.0" prefHeight="29.0" prefWidth="208.0" promptText="환전된 금액" />
+            <Label fx:id="lbto" layoutX="669.0" layoutY="216.0" text="USD">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            
+        <RadioButton fx:id="rdother" layoutX="196.0" layoutY="274.0" mnemonicParsing="false" onAction="#onOtherAction" selected="true" text="다른 국가화폐로 환전">
+               <toggleGroup>
+                  <ToggleGroup fx:id="toggle" />
+               </toggleGroup></RadioButton>
+                <RadioButton fx:id="rdkrw" layoutX="419.0" layoutY="274.0" mnemonicParsing="false" onAction="#onKrwAction" text="대한민국 한화로 환전" toggleGroup="$toggle" />
+            <Label layoutX="186.0" layoutY="135.0" text="KRW">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="436.0" layoutY="135.0" text="KRW">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="699.0" layoutY="135.0" text="KRW">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+           
+            
+         </children>
+      </AnchorPane>
+   </right>
+</BorderPane>

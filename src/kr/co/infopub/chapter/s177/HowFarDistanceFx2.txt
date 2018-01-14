@@ -1,0 +1,201 @@
+001: package kr.co.infopub.chapter.s177;
+002: 
+003: import java.io.BufferedReader;
+004: import java.io.BufferedWriter;
+005: import java.io.File;
+006: import java.io.FileReader;
+007: import java.io.FileWriter;
+008: import java.io.IOException;
+009: import java.net.URL;
+010: import java.util.Date;
+011: 
+012: import org.json.JSONArray;
+013: import org.json.JSONObject;
+014: import org.json.simple.JSONValue;
+015: 
+016: import javafx.application.Application;
+017: import javafx.application.Platform;
+018: import javafx.concurrent.Worker.State;
+019: import javafx.event.ActionEvent;
+020: import javafx.event.EventHandler;
+021: import javafx.geometry.Insets;
+022: import javafx.geometry.Pos;
+023: import javafx.scene.Scene;
+024: import javafx.scene.control.Button;
+025: import javafx.scene.control.Label;
+026: import javafx.scene.layout.HBox;
+027: import javafx.scene.layout.VBox;
+028: import javafx.scene.web.WebEngine;
+029: import javafx.scene.web.WebView;
+030: import javafx.stage.FileChooser;
+031: import javafx.stage.Stage;
+032: 
+033: import netscape.javascript.JSObject;
+034: 
+035: public class HowFarDistanceFx2 extends Application {
+036: 	 public static void main(String[] args) {
+037: 	        launch(args);
+038: 	 }
+039: 	JavaApplication app;
+040: 	Label lbhowfar=new Label("");
+041: 	 
+042:     @Override
+043:     public void start(Stage stage) {
+044:     	
+045:     	stage.setTitle("거리는 얼마인가요?");
+046:     
+047:     	WebView webView = new WebView();
+048:         WebEngine webEngine = webView.getEngine();
+049:         URL url = getClass().getResource("geonew2.html");
+050:         //웹호출
+051:         webEngine.load(url.toExternalForm());
+052:         app=new JavaApplication(stage);
+053:         
+054: //        webEngine.getLoadWorker().stateProperty().addListener(
+055: //                new ChangeListener<State>(){
+056: //                     
+057: //                    @Override
+058: //                    public void changed(ObservableValue<? extends State> ov, State oldState, State newState) {
+059: //                    	System.out.println("------state-----------------------------------"+newState);
+060: //                        if(newState == State.SUCCEEDED){
+061: //                        	JSObject window = (JSObject) webEngine.executeScript("window");
+062: //                            window.setMember("app", app);  //app이름으로 호출할 JS
+063: //                        }
+064: //                    }
+065: //                });
+066:          webEngine.getLoadWorker().stateProperty().addListener(
+067:             (ov,  oldState,  newState) ->{
+068:                     System.out.println("------state-----------------------------------"+newState);
+069:                     if(newState == State.SUCCEEDED){
+070:                     	JSObject window = (JSObject) webEngine.executeScript("window");
+071:                         window.setMember("app", app);  //app이름으로 호출할 JS
+072:                     }
+073:                 });
+074:         //세팅준비
+075: //        webEngine.load(url.toExternalForm());
+076: //        JSObject window = (JSObject) webEngine.executeScript("window");
+077: //        window.setMember("app", new JavaApplication(stage));    
+078: 
+079:         
+080:         VBox root = new VBox(10);
+081:         HBox hbox = new HBox(10);
+082:         hbox.setPadding(new Insets(5));
+083:         hbox.setAlignment(Pos.CENTER);
+084:         
+085:        
+086:         
+087:         Button btnExit = new Button("Exit");
+088:         btnExit.setOnAction(e -> {
+089:             Platform.exit();
+090:         });
+091:         Button btnAbout = new Button("About");
+092:         //자바에서 스크립트로 전달
+093:         btnAbout.setOnAction(new EventHandler<ActionEvent>(){
+094:             @Override
+095:             public void handle(ActionEvent arg0) {
+096:             	webEngine.executeScript( " updateMessage(' " + stage.getTitle()+" "+new Date() + " ') " );
+097:             }
+098:         });
+099:         //자바에서 스크립트로 전달
+100:         Button btnClear = new Button("Clear");
+101:         btnClear.setOnAction(new EventHandler<ActionEvent>(){
+102:             @Override
+103:             public void handle(ActionEvent arg0) {
+104:             	webEngine.executeScript( "clearMessage()" );
+105:             	lbhowfar.setText("");
+106:             }
+107:         });
+108:         
+109:         Button btnReadFx = new Button("ReadFx");
+110:         btnReadFx.setOnAction(new EventHandler<ActionEvent>(){
+111:         	
+112:             @Override
+113:             public void handle(ActionEvent arg0) {
+114:             	FileChooser fileChooser = new FileChooser();
+115:                 File file = fileChooser.showOpenDialog(stage);
+116:                
+117:                 try (BufferedReader reader = new BufferedReader(new FileReader(file))){
+118:                     Object obj = JSONValue.parse(reader);
+119:                     //json을 자바스트립트에 넝어서 라인을 그림
+120:                     webEngine.executeScript("drawLine(" + obj + ")");
+121:                     System.out.println("read------------------------------------->"+file.getAbsolutePath());
+122:                     //거리 구하기
+123:                     HowFarDistance2 howfarw=new HowFarDistance2(); //json
+124:                     howfarw.makeDistances(file.getAbsolutePath());
+125:                     double dd=howfarw.howfar();
+126:                     lbhowfar.setText(String.format("거리: %.2fkm", dd));
+127:                     webEngine.executeScript( " updateMessage(' " + "You walk "+dd+" Km." + " ') " );
+128:                 } catch (Exception ex) {
+129:                    System.out.println("read----Exception--------------------------------->"+ex);
+130:                    webEngine.executeScript( "clearMessage() " );
+131:                 }
+132:             }
+133:         });
+134:         
+135:         Button Refresh = new Button("Refresh");
+136:         Refresh.setOnAction(new EventHandler<ActionEvent>(){
+137:             @Override
+138:             public void handle(ActionEvent arg0) {	
+139:              webEngine.load(url.toExternalForm());
+140:              JSObject window = (JSObject) webEngine.executeScript("window");
+141:              window.setMember("app", app= new JavaApplication(stage));
+142:             }
+143:         });
+144:         Button btndist = new Button("거리구하기");
+145:         btndist.setOnAction(new EventHandler<ActionEvent>(){
+146:             @Override
+147:             public void handle(ActionEvent arg0) {	
+148:             	webEngine.executeScript( " calculateFX()" );
+149:             }
+150:         });
+151:         hbox.getChildren().addAll(lbhowfar,btnAbout,btnClear,btnReadFx,btndist,Refresh,btnExit);
+152:         root.getChildren().addAll(webView, hbox);
+153:         //Scene scene = new Scene(root, 1300, 650); //600,600
+154:         Scene scene = new Scene(root, 1400, 700);
+155:         stage.setScene(scene);
+156:         stage.show();
+157:     }
+158: 
+159:     /**
+160:      * 웹엔진에서 호출할 자바스크립ㅌ
+161:      */
+162:     public class JavaApplication {
+163:        
+164:     	Stage stage;
+165:     	public JavaApplication(Stage stage){
+166:     		this.stage=stage;
+167:     		
+168:     	}
+169:         public void saveJSToJavaFxFile(String msg) {
+170:         	System.out.println("-------------------------------->"+msg);
+171:         	FileChooser fileChooser = new FileChooser();
+172:             File file = fileChooser.showSaveDialog(this.stage);
+173:             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+174:                 writer.write(msg);
+175:             } catch (IOException ex) {
+176:             	System.out.println("-------------------------------->"+ex);
+177:             }
+178:         }
+179:         public void calculate(String msg) {
+180:         	double tot=0.0;
+181:         	tot=HowFarDistance2.howfarDistance(getLatLng(msg))	;	
+182:         	lbhowfar.setText(String.format("거리: %.2fkm", tot));
+183:         }
+184:         private  double [][] getLatLng(String json){
+185:     		JSONObject jObject = new JSONObject(json);
+186:     		JSONArray loc = jObject.getJSONArray("loc");
+187:     		double [][]latlng=new double[loc.length()][2];
+188:     		if(loc!=null){
+189:         		for(int i=0; i<loc.length(); i++) {
+190:         			JSONObject local = loc.getJSONObject(i);
+191:         			int marknum=local.getInt("marknum");
+192:         			String markerX = local.getString("markerX");
+193:         			String markerY = local.getString("markerY");
+194:         			latlng[i][0]=Double.parseDouble(markerX.trim());
+195:         			latlng[i][1]=Double.parseDouble(markerY.trim());
+196:         		}	
+197:     		}
+198:     		return latlng;
+199:     	}
+200:     }
+201: }

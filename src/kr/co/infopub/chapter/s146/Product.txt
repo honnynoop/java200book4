@@ -1,0 +1,110 @@
+001: package kr.co.infopub.chapter.s146;
+002: import java.io.*;
+003: public class Product implements Serializable{
+004: 	private int      prodNum;   //제조번호 숫자 6  x
+005: 	private String   prodPart;  //제조구분 문자 1
+006: 	private String   pName;     //담당자  문자 4
+007: 	private int      pValue;    //단가  숫자 3
+008: 	private int      pAmount;   // 판매랑 숫자 3
+009: 	private String   pPant;     // 공장코드 문자 1
+010: 	private String   pConsum;   // 거래코드 문자 1
+011: 	private int      pPoint;    // 제조포인트 숫자 3  xxx
+012: 	private int      pCount;    // 출고 횟수 숫자 3
+013: 	private int      pMoney;    // 매출액 숫자 3     xxx
+014: 	private String   pGrade;    // 제조등급 문자 1
+015: 	public int getPAmount() {
+016: 		return pAmount;
+017: 	}
+018: 	public String getPConsum() {
+019: 		return pConsum;
+020: 	}
+021: 	public int getPCount() {
+022: 		return pCount;
+023: 	}
+024: 	public String getPGrade() {
+025: 		return pGrade;
+026: 	}
+027: 	public int getPMoney() {
+028: 		return pMoney;
+029: 	}
+030: 	public String getPName() {
+031: 		return pName;
+032: 	}
+033: 	public String getPPant() {
+034: 		return pPant;
+035: 	}
+036: 	public int getPPoint() {
+037: 		return pPoint;
+038: 	}
+039: 	public int getProdNum() {
+040: 		return prodNum;
+041: 	}
+042: 	public String getProdPart() {
+043: 		return prodPart;
+044: 	}
+045: 	public int getPValue() {
+046: 		return pValue;
+047: 	}
+048: 	public void setPAmount(int i) {
+049: 		pAmount = i;
+050: 	}
+051: 	public void setPConsum(String string) {
+052: 		pConsum = string;
+053: 	}
+054: 	public void setPCount(int i) {
+055: 		pCount = i;
+056: 	}
+057: 	public void setPGrade(String string) {
+058: 		pGrade = string;
+059: 	}
+060: 	public void setPMoney(int i) {
+061: 		pMoney = i;
+062: 	}
+063: 	public void setPName(String string) {
+064: 		pName = string;
+065: 	}
+066: 	public void setPPant(String string) {
+067: 		pPant = string;
+068: 	}
+069: 	public void setPPoint(int i) {
+070: 		pPoint = i;
+071: 	}
+072: 	public void setProdNum(int i) {
+073: 		prodNum = i;
+074: 	}
+075: 	public void setProdPart(String string) {
+076: 		prodPart = string;
+077: 	}
+078: 	public void setPValue(int i) {
+079: 		pValue = i;
+080: 	}
+081: 	public void setProduct(String[] s){
+082: 		this.setProdNum(Integer.parseInt(s[0].trim()));
+083: 		this.setProdPart(s[1].trim());
+084: 		this.setPName(s[2].trim());
+085: 		this.setPValue(Integer.parseInt(s[3].trim()));
+086: 		this.setPAmount(Integer.parseInt(s[4].trim()));
+087: 		this.setPPant(s[5].trim());
+088: 		this.setPConsum(s[6].trim());
+089: 		this.setPPoint(Integer.parseInt(s[7].trim()));
+090: 		this.setPCount(Integer.parseInt(s[8].trim()));
+091: 		this.setPMoney(Integer.parseInt(s[9].trim()));
+092: 		this.setPGrade(s[10].trim());
+093: 	}
+094: 	public String toString(){
+095: 		StringBuffer bf=new StringBuffer();
+096: 		bf.append("-------------------------------")
+097: 		.append("["+this.prodNum+"/")
+098: 		.append(this.prodPart+"/")
+099: 		.append(this.pName+"/")
+100: 		.append(this.pValue+"/")
+101: 		.append(this.pAmount+"/")
+102: 		.append(this.pPant+"/")
+103: 		.append(this.pPoint+"/")
+104: 		.append(this.pCount+"/")
+105: 		.append(this.pMoney+"/")
+106: 		.append(this.pGrade+"]");
+107: //		.append("========================");
+108: 		return bf.toString();
+109: 	}
+110: }

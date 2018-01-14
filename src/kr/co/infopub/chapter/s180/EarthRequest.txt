@@ -1,0 +1,110 @@
+001: package kr.co.infopub.chapter.s180;
+002: import org.json.JSONArray;
+003: import org.json.JSONException;
+004: import org.json.JSONObject;
+005: import java.io.BufferedInputStream;
+006: import java.io.BufferedReader;
+007: import java.io.InputStreamReader;
+008: import java.net.MalformedURLException;
+009: import java.net.URL;
+010: import java.text.SimpleDateFormat;
+011: import java.util.ArrayList;
+012: import java.util.Date;
+013: public class EarthRequest {
+014:  ArrayList<Earthquake> earthquakes=new ArrayList<Earthquake>();
+015:  boolean isConnection=false;
+016:  public boolean isConnection() {
+017:     return isConnection;
+018:  }
+019:  public ArrayList<Earthquake> getEarthquakes() {
+020:     return earthquakes;
+021:  }
+022:  public  void saveEarth(String newUrls){
+023: 	try {
+024: 		URL url = new URL(newUrls);
+025: 		try (BufferedReader reader = new BufferedReader(
+026: 			 new InputStreamReader(
+027: 			  new BufferedInputStream(url.openStream()), "utf-8"))){
+028: 			StringBuilder sb = new StringBuilder();
+029: 			String line = null;
+030: 			while ((line = reader.readLine()) != null){
+031: 				sb.append(line.trim());      
+032: 			}
+033: 			//System.out.println(sb.toString());
+034: 			parseTrackToJson(sb.toString());
+035: 		    isConnection=true;
+036: 		} catch (Exception e) {
+037: 		    isConnection=false;
+038: 		} 
+039: 	} catch (MalformedURLException e) {
+040: 		System.out.println(e);
+041: 	}
+042:  }
+043:  // ArrayList<Earthquake> earthquakes?óê ???û•
+044:  private  void parseTrackToJson(String sjson) throws JSONException {
+045: 	earthquakes.clear();
+046: 	JSONObject jObject = new JSONObject(sjson);
+047: 	JSONArray jArray = jObject.getJSONArray("earthquakes");
+048: 	try {
+049: 		for(int i=0; i<jArray.length(); i++) {
+050: 			JSONObject json=jArray.getJSONObject(i);
+051: 			// JSONObject -> Earthquake
+052: 			Earthquake t=toEarth(json); 
+053: 			earthquakes.add(t);  
+054: 		}
+055: 	} catch (JSONException e) {
+056: 		System.out.println(e);
+057: 	}
+058:  }
+059:  //JSONObject -> Earthquake
+060:  public  Earthquake toEarth(JSONObject json) throws JSONException{
+061: 	Earthquake earth=null;
+062: 	String eqid = json.getString("eqid");
+063: 	double magnitude = json.getDouble("magnitude");
+064: 	double longitude = json.getDouble("lng");
+065: 	double latitude = json.getDouble("lat");
+066: 	String source = json.getString("src");
+067: 	String datetime=json.getString("datetime");
+068: 	double depth = json.getDouble("depth");
+069: 	 earth=new Earthquake(
+070: 		eqid,magnitude,longitude,latitude,source,datetime,depth,"");
+071: 	return earth;
+072:  }
+073:  public  String para(String key, String value){
+074: 	return String .format("%s=%s",key,value);
+075:  }
+076:  public  String todate2(Date dd){
+077:     SimpleDateFormat sdf=new SimpleDateFormat("yyyy");
+078:     return sdf.format(dd);
+079:  }
+080:  public void earthrequests(){
+081: 	earthrequests(todate2(new Date()));
+082:  }
+083:  public void earthrequests(String dd){
+084: 	String[]params={"90","-90","180","-180","5","500", dd+"-12-31"};
+085: 	String a=String.format("%s?%s%s%s%s%s%s%s%s",
+086: 			User.GEOURL,
+087: 			para("username",User.USERNAME),
+088: 			para("&north",params[0]),
+089: 			para("&south",params[1]),
+090: 			para("&east",params[2]),
+091: 			para("&west",params[3]),
+092: 			para("&minMagnitude",params[4]),
+093: 			para("&maxRows",params[5]),
+094: 			para("&date",params[6])    
+095: 	);
+096: 	System.out.println(a);
+097: 	saveEarth(a);  // ArrayList<Earthquake> earthquakes ???û•
+098:  }
+099:  public  void printJson(){
+100: 	for (Earthquake earth : earthquakes) {
+101: 		System.out.println(earth);
+102: 	}
+103:  }
+104:  public static void main(String[] args) {
+105: 	EarthRequest erq=new EarthRequest();
+106: 	erq.earthrequests();
+107: 	erq.printJson();
+108: 	GeoPrint2.printToJSON(erq.getEarthquakes(), "wquake"+erq.todate2(new Date())+".json");
+109:  }
+110: }

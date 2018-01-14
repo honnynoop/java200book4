@@ -1,0 +1,43 @@
+01: package kr.co.infopub.chapter.s156;
+02: import java.io.InputStreamReader;
+03: import java.net.URL;
+04: import java.text.SimpleDateFormat;
+05: import java.util.Calendar;
+06: import java.io.BufferedReader;
+07: public class FixerConvert {
+08: 	public static String conversion(String date,String base) {
+09: 		BufferedReader br=null;
+10: 		String newUrls1 = "http://api.fixer.io/%s?base=%s";
+11: 		String newUrls=String.format(newUrls1, date,base);
+12: 		URL url=null;
+13: 		StringBuffer sb=new StringBuffer();
+14: 		try {
+15: 			url=new URL(newUrls); // http://api.fixer.io
+16: 			System.out.println(newUrls);
+17: 			br=new BufferedReader(new InputStreamReader(url.openStream(),"utf-8"));
+18: 			String msg="";
+19: 			// http://api.fixer.io/2017-06-09?base=USD 를 읽어 들인다.
+20: 			while((msg=br.readLine())!=null){
+21: 				sb.append(msg);
+22: 			}
+23: 		} catch (Exception e) {
+24: 			
+25: 		}
+26: 		return sb.toString();
+27: 	}
+28: 	public static void main(String[] args) {
+29: 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+30: 		Calendar cal=Calendar.getInstance();
+31: 		String date=sdf.format(cal.getTime());
+32: 		String base="USD";       
+33: 		String fixerrate=FixerConvert.conversion(date,base);
+34: 		System.out.println( fixerrate);
+35: 		String base2="JPY";       
+36: 		String fixerrate2=FixerConvert.conversion(date,base2);
+37: 		System.out.println( fixerrate2);
+38: 		String base3="CNY";       
+39: 		String fixerrate3=FixerConvert.conversion(date,base3);
+40: 		System.out.println( fixerrate3);
+41: 	}
+42: }
+43: 	  

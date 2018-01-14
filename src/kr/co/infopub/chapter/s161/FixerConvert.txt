@@ -1,0 +1,92 @@
+01: package kr.co.infopub.chapter.s161;
+02: import org.json.JSONObject;
+03: import java.io.InputStreamReader;
+04: import java.net.URL;
+05: import java.text.SimpleDateFormat;
+06: import java.util.Calendar;
+07: import java.io.BufferedReader;
+08: public class FixerConvert {
+09: 	public static FixerRate convert(String date,String base) {
+10: 		BufferedReader br=null;
+11: 		String newUrls1 = "http://api.fixer.io/%s?base=%s";
+12: 		String newUrls=String.format(newUrls1, date,base);
+13: 		//System.out.println(newUrls);
+14: 		FixerRate fixerrate=null;
+15: 		URL url=null;
+16: 		try {
+17: 			url=new URL(newUrls); // http://api.fixer.io
+18: 			System.out.println(newUrls);
+19: 			br=new BufferedReader(new InputStreamReader(url.openStream(),"utf-8"));
+20: 			StringBuffer sb=new StringBuffer();
+21: 			String msg="";
+22: 			// http://api.fixer.io/2017-06-09?base=USD 를 읽어 들인다.
+23: 			while((msg=br.readLine())!=null){
+24: 				sb.append(msg);
+25: 			}
+26: 			System.out.println(sb.toString());
+27: 			// json으로 바꾼후 객체에 담는다.
+28: 			fixerrate=parseJSON(sb.toString(), base);
+29: 		} catch (Exception e) {
+30: 			
+31: 		}
+32: 		return fixerrate;
+33: 	}
+34: 	
+35: 	public static FixerRate  parseJSON(String  data,String base) throws Exception{
+36: 		JSONObject jObject = new JSONObject(data);
+37: 		JSONObject rates=jObject.getJSONObject("rates");
+38: 
+39: 		FixerRate fixerrate=new FixerRate();
+40: 		fixerrate.date=jObject.getString("date");
+41: 		fixerrate.base=jObject.getString("base");
+42: 		if(base.equals("USD")){
+43: 			fixerrate.usd=1.0;
+44: 			fixerrate.krw=rates.getDouble("KRW");
+45: 			fixerrate.jpy=rates.getDouble("JPY");
+46: 			fixerrate.eur=rates.getDouble("EUR");
+47: 			fixerrate.cny=rates.getDouble("CNY");
+48: 		}else if(base.equals("KRW")){
+49: 			fixerrate.usd=rates.getDouble("USD");
+50: 			fixerrate.krw=1.0;
+51: 			fixerrate.jpy=rates.getDouble("JPY");
+52: 			fixerrate.eur=rates.getDouble("EUR");
+53: 			fixerrate.cny=rates.getDouble("CNY");
+54: 		}else if(base.equals("JPY")){
+55: 			fixerrate.usd=rates.getDouble("USD");
+56: 			fixerrate.krw=rates.getDouble("KRW");
+57: 			fixerrate.jpy=1.0;
+58: 			fixerrate.eur=rates.getDouble("EUR");
+59: 			fixerrate.cny=rates.getDouble("CNY");
+60: 		}  else if(base.equals("EUR")){
+61: 			fixerrate.usd=rates.getDouble("USD");
+62: 			fixerrate.krw=rates.getDouble("KRW");
+63: 			fixerrate.jpy=rates.getDouble("JPY");
+64: 			fixerrate.eur=1.0;
+65: 			fixerrate.cny=rates.getDouble("CNY");
+66: 		} else if(base.equals("CNY")){
+67: 			fixerrate.usd=rates.getDouble("USD");
+68: 			fixerrate.krw=rates.getDouble("KRW");
+69: 			fixerrate.jpy=rates.getDouble("JPY");
+70: 			fixerrate.eur=rates.getDouble("EUR");
+71: 			fixerrate.cny=1.0;
+72: 		}	
+73: 		return fixerrate;
+74: 	}
+75: 	
+76: 	public static void main(String[] args) {
+77: 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+78: 		Calendar cal=Calendar.getInstance();
+79: 		String date=sdf.format(cal.getTime());
+80: 		String base="USD";       
+81: 		//String base="KRW";  
+82: 		for (int i = -30; i < 1; i++) {
+83: 	    	String todays=RestDay.toWantedDay(date,i);
+84: 	    	if(! RestDay.isRest(todays)){
+85: 	    		FixerRate fixerrate2=FixerConvert.convert(todays,base);
+86: 		    	System.out.println(fixerrate2);
+87: 	    	}
+88: 	    	
+89: 	    }
+90: 	}
+91: }
+92: 	  

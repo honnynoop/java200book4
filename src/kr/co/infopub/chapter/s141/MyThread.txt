@@ -1,0 +1,8 @@
+1: package kr.co.infopub.chapter.s141;
+2: public class MyThread extends Thread{
+3: 	public void run(){
+4: 		for(int i=0;i<500;i++){
+5: 			System.out.print("T");
+6: 		}
+7: 	}
+8: }

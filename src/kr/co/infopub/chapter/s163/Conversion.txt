@@ -1,0 +1,15 @@
+01: package kr.co.infopub.chapter.s163;
+02: // 일차원 배열과 반복문 for
+03: public class Conversion {
+04: 	public static void main(String[] args) {
+05: 		String [] names={"Cm","M","Inch","Feet","Yard","Mile"};
+06: 		for(int i=0; i<names.length; i++){
+07: 			System.out.printf("%s\t\t\t",names[i]);
+08: 		}
+09: 		System.out.println();
+10: 		for(String ss: names){
+11: 			System.out.printf("%s\t\t\t",ss);
+12: 		}
+13: 		System.out.println();
+14: 	}
+15: }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="347.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kr.co.infopub.chapter.s166.DistanceConversionFxController">
+   <center>
+      <AnchorPane prefHeight="332.0" prefWidth="691.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <children>
+            <Label layoutX="69.0" layoutY="146.0" text="Cm" AnchorPane.leftAnchor="69.0">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfcm" layoutX="118.0" layoutY="142.0" prefHeight="29.0" prefWidth="200.0" AnchorPane.leftAnchor="118.0" />
+            <TextField fx:id="tfinput" layoutX="81.0" layoutY="80.0" prefHeight="29.0" prefWidth="237.0" promptText="환산하려는 값을 입력하세요" AnchorPane.leftAnchor="81.0" />
+            <ComboBox fx:id="cbdistance" layoutX="386.0" layoutY="80.0" onAction="#cbdistanceOnAction" prefHeight="29.0" prefWidth="258.0" promptText="거리단위를 선택하세요" AnchorPane.leftAnchor="386.0" />
+            <TextField fx:id="tfm" layoutX="434.0" layoutY="142.0" prefHeight="29.0" prefWidth="207.0" AnchorPane.leftAnchor="434.0" />
+            <Label layoutX="378.0" layoutY="146.0" text="M" AnchorPane.leftAnchor="378.0">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="377.0" layoutY="190.0" text="Feet" AnchorPane.leftAnchor="378.0">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tffeet" layoutX="434.0" layoutY="186.0" prefHeight="29.0" prefWidth="207.0" AnchorPane.leftAnchor="434.0" />
+            <TextField fx:id="tfinch" layoutX="118.0" layoutY="186.0" prefHeight="29.0" prefWidth="200.0" AnchorPane.leftAnchor="118.0" />
+            <Label layoutX="68.0" layoutY="190.0" text="Inch" AnchorPane.leftAnchor="69.0">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="68.0" layoutY="233.0" text="Yard" AnchorPane.leftAnchor="69.0">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfyard" layoutX="118.0" layoutY="229.0" prefHeight="29.0" prefWidth="200.0" AnchorPane.leftAnchor="118.0" />
+            <TextField fx:id="tfmile" layoutX="436.0" layoutY="229.0" prefHeight="29.0" prefWidth="205.0" AnchorPane.leftAnchor="434.0" />
+            <Label layoutX="377.0" layoutY="233.0" text="Mile" AnchorPane.leftAnchor="378.0">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

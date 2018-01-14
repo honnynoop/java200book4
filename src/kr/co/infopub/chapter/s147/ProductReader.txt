@@ -1,0 +1,85 @@
+01: package kr.co.infopub.chapter.s147;
+02: import java.io.*;
+03: import java.util.*;
+04: public class ProductReader {
+05:  private List<String> list=new ArrayList<>();
+06:  public boolean isExist(String fname){
+07: 	boolean isE=false;
+08: 	File f=null;
+09: 	try{
+10: 		f=new File(fname);
+11: 		if(f.exists()){
+12: 			isE=true;
+13: 		}
+14: 	}catch(Exception ee){
+15: 		log(ee.getMessage());
+16: 	}
+17: 	return isE;
+18:  }
+19:  public int listSize(){
+20: 	return list.size();
+21:  }
+22:  public void readTexts(String fname){
+23: 	list.clear();
+24: 	FileReader fr=null;
+25: 	BufferedReader br=null;
+26: 	File ff=null;
+27: 	try{
+28: 		if(isExist(fname)){
+29: 			ff=new File(fname);
+30: 			fr=new FileReader(ff);
+31: 			br=new BufferedReader(fr);
+32: 		}
+33: 		String msg="";
+34: 		while((msg=br.readLine())!=null){
+35: 			list.add(msg);
+36: 		}
+37: 			
+38: 	}catch(Exception ee){
+39: 		log(ee.getMessage());
+40: 	}finally{
+41: 		try{
+42: 			br.close();
+43: 			fr.close();
+44: 		}catch(Exception eee){
+45: 			log(eee.getMessage());
+46: 		}
+47: 	}
+48:  }
+49:  public String readText(String fname){
+50: 	String msg="";
+51: 	FileReader fr=null;
+52: 	BufferedReader br=null;
+53: 	File ff=null;
+54: 	try{
+55: 		if(isExist(fname)){
+56: 			ff=new File(fname);
+57: 			fr=new FileReader(ff);
+58: 			br=new BufferedReader(fr);
+59: 		}
+60: 		msg=br.readLine();
+61: 	}catch(Exception ee){
+62: 		log(ee.getMessage());
+63: 	}finally{
+64: 		try{
+65: 			br.close();
+66: 			fr.close();
+67: 		}catch(Exception eee){
+68: 			log(eee.getMessage());
+69: 		}
+70: 	}
+71: 	return msg;
+72:  }
+73:  public String getText(int i){
+74: 	if(i+1>list.size()){
+75: 	 return "";
+76: 	}
+77: 	return list.get(i);
+78:  }
+79:  private static void log(String msg){
+80: 	System.out.println("Error------------->:"+msg);
+81:  }
+82:  public List<String> getAllLines(){
+83: 	return list;
+84:  }
+85: }

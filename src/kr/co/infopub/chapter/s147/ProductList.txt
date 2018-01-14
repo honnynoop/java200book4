@@ -1,0 +1,56 @@
+01: package kr.co.infopub.chapter.s147;
+02: import java.util.*;
+03: public class ProductList {
+04: 	private int[] catg={6,1,4,3,3,1,1,3,3,3,1};
+05: 	public String [] splist(String str){
+06: 		String[] ss=new String[catgLength()];
+07: 		ss[0]=str.substring(0,catNumTo(catg,0)).trim();
+08: 		for(int i=1;i<ss.length;i++){
+09: 			ss[i]=str.substring(catNumTo(catg,i-1),
+10: 			               catNumTo(catg,i)).trim();
+11: 		}
+12: 		return ss;
+13: 	}
+14: 	public Product splistP(String str){
+15: 		Product p=new Product();
+16: 		String[] ss=splist(str);
+17: 		p.setProduct(ss);
+18: 		return p;
+19: 	}
+20: 	public List<Product> getAllProducts(List<String> v){
+21: 		List<Product> products=new ArrayList<Product>();
+22: 		for(int i=0;i<v.size();i++){
+23: 			String str=v.get(i);
+24: 			Product p=splistP(str);
+25: 			products.add(p);
+26: 		}
+27: 		return products;
+28: 	}
+29:     public List<Product> getAllProdInGrade(String []ss1, List<Product> v){
+30:     	List<Product> products=new ArrayList<Product>();
+31: 		for(int i=0;i<v.size();i++){
+32: 			Product p=v.get(i);
+33: 			for(int j=0;j<ss1.length;j++){
+34: 				if(p.getPGrade().equals(ss1[j])){
+35: 					products.add(p);
+36: 				}
+37: 			}
+38: 		}
+39: 		return products;
+40: 	}
+41: 	private int catgLength(){
+42: 		return this.catg.length;
+43: 	}
+44: 	private int catNumTo(int [] aa,int a){
+45: 		int toto=0;
+46: 		if(aa.length<a){
+47: 			toto=0;
+48: 		}else{
+49: 			for(int i=0;i<=a;i++){
+50: 				toto+=aa[i];
+51: 			}
+52: 		}
+53: 		return toto;
+54: 	}
+55: 		
+56: }

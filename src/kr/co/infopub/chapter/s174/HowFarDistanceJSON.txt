@@ -1,0 +1,56 @@
+01: package kr.co.infopub.chapter.s174;
+02: import java.io.BufferedReader;
+03: import java.io.FileNotFoundException;
+04: import java.io.FileReader;
+05: import java.io.IOException;
+06: import java.util.ArrayList;
+07: import org.json.JSONArray;
+08: import org.json.JSONObject;
+09: public class HowFarDistanceJSON {
+10:  private String json="";
+11:  public HowFarDistanceJSON (){
+12: 	makeDistances();
+13:  }
+14:  public  void makeDistances(){
+15: 	StringBuffer sb=new StringBuffer();
+16: 	try {
+17: 		BufferedReader br=
+18: 		  new BufferedReader( new FileReader("loc.json"));
+19: 		String msg="";
+20: 		while((msg=br.readLine())!=null){
+21: 			if(!msg.trim().equals("")){
+22: 				sb.append(msg.trim());
+23: 			}
+24: 		}
+25: 		
+26: 	} catch (FileNotFoundException e) {
+27: 		System.out.println(e);
+28: 	} catch (IOException e) {
+29: 		System.out.println(e);
+30: 	}
+31: 	json=sb.toString();
+32:  }
+33:  public  double [][] getLatLng(){
+34: 	JSONObject jObject = new JSONObject(json);
+35: 	JSONArray loc = jObject.getJSONArray("loc");
+36: 	double [][]latlng=new double[loc.length()][2];
+37: 	//{"loc":[{"marknum":1,"markerX":"37.661129546698454",
+38: 	//	                 "markerY":"126.83977603912354"}, 
+39: 	for(int i=0; i<loc.length(); i++) {
+40: 		JSONObject local = loc.getJSONObject(i);
+41: 		String markerX = local.getString("markerX");
+42: 		String markerY = local.getString("markerY");
+43: 		latlng[i][0]=Double.parseDouble(markerX.trim());
+44: 		latlng[i][1]=Double.parseDouble(markerY.trim());
+45: 	}	
+46: 	return latlng;
+47:  }
+48:  public ArrayList<Geo> getGeos(){
+49: 	 ArrayList<Geo> geos=new ArrayList<>();
+50: 	 double [][] ltln=getLatLng();
+51: 	 for (int i = 0; i < ltln.length; i++) {
+52: 		 geos.add(new Geo(ltln[i][0],ltln[i][1]));
+53: 	 }
+54: 	 return geos;
+55:  }
+56: }

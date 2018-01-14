@@ -1,0 +1,52 @@
+01: package kr.co.infopub.chapter.s1482;
+02: import java.util.*;
+03: import java.util.stream.Collectors;
+04: public class ProductList {
+05: 	private int[] catg={6,1,4,3,3,1,1,3,3,3,1};
+06: 	public String [] splist(String str){
+07: 		String[] ss=new String[catgLength()];
+08: 		ss[0]=str.substring(0,catNumTo(catg,0)).trim();
+09: 		for(int i=1;i<ss.length;i++){
+10: 			ss[i]=str.substring(catNumTo(catg,i-1),
+11: 			               catNumTo(catg,i)).trim();
+12: 		}
+13: 		return ss;
+14: 	}
+15: 	public Product splistP(String str){
+16: 		Product p=new Product();
+17: 		String[] ss=splist(str);
+18: 		p.setProduct(ss);
+19: 		return p;
+20: 	}
+21: 	public List<Product> getAllProducts(List<String> v){
+22: 		List<Product>products =v.stream().map(
+23: 			str->splistP(str)).collect(Collectors.toList());
+24: 		return products;
+25: 	}
+26:     public List<Product> getAllProdInGrade(String []ss1, List<Product> v){
+27:     	List<Product> products=new ArrayList<>();
+28:     	for (String s: ss1) {
+29:     		List<Product> pro=v.stream()
+30:     				.filter(p->{ return p.getPGrade().equals(s);})
+31:     				.collect(Collectors.toList());
+32:     		products.addAll(pro);
+33: 		}
+34: 		return products;
+35: 	}
+36: 	// 배열의 크기 {6,1,4,3,3,1,1,3,3,3,1} 11
+37: 	private int catgLength(){
+38: 		return this.catg.length;
+39: 	}
+40: 	// a번째까지의 합 (aa,3) -> 6+1+4+3
+41: 	private int catNumTo(int [] aa,int a){
+42: 		int toto=0;
+43: 		if(aa.length<a){
+44: 			toto=0;
+45: 		}else{
+46: 			for(int i=0;i<=a;i++){
+47: 				toto+=aa[i];
+48: 			}
+49: 		}
+50: 		return toto;
+51: 	}
+52: }

@@ -1,0 +1,6 @@
+1: package kr.co.infopub.chapter.s180;
+2: public class User {
+3: 	// 개인의 ID로 변경해서 사용하세요
+4:     public final static String USERNAME="honnynoop";
+5:     public final static String GEOURL="http://api.geonames.org/earthquakesJSON";
+6: }

@@ -1,0 +1,175 @@
+001: package kr.co.infopub.chapter.s179;
+002: import java.io.BufferedReader;
+003: import java.io.BufferedWriter;
+004: import java.io.File;
+005: import java.io.FileReader;
+006: import java.io.FileWriter;
+007: import java.io.IOException;
+008: import java.net.URL;
+009: import java.text.SimpleDateFormat;
+010: import java.util.Date;
+011: import org.json.simple.JSONValue;
+012: import javafx.application.Application;
+013: import javafx.application.Platform;
+014: import javafx.concurrent.Worker.State;
+015: import javafx.event.ActionEvent;
+016: import javafx.event.EventHandler;
+017: import javafx.geometry.Insets;
+018: import javafx.geometry.Pos;
+019: import javafx.scene.Scene;
+020: import javafx.scene.control.Button;
+021: import javafx.scene.layout.HBox;
+022: import javafx.scene.layout.VBox;
+023: import javafx.scene.web.WebEngine;
+024: import javafx.scene.web.WebView;
+025: import javafx.stage.FileChooser;
+026: import javafx.stage.Stage;
+027: import netscape.javascript.JSObject;
+028: public class HowFarDistanceFx2 extends Application {
+029:  public static void main(String[] args) {
+030:         launch(args);
+031:  }
+032:  JavaApplication app;
+033:  @Override
+034:  public void start(Stage stage) {
+035: 	stage.setTitle("World EarthQuakes");
+036: 	WebView webView = new WebView();
+037:     WebEngine webEngine = webView.getEngine();
+038:     URL url = getClass().getResource("geonew3.html");
+039:     //웹호출
+040:     webEngine.load(url.toExternalForm());
+041:     app=new JavaApplication(stage);
+042:      webEngine.getLoadWorker().stateProperty().addListener(
+043:         (ov,  oldState,  newState) ->{
+044:                 System.out.println("------state-----------------------------------"+newState);
+045:                 if(newState == State.SUCCEEDED){
+046:                 	JSObject window = (JSObject) webEngine.executeScript("window");
+047:                     window.setMember("app", app);  //app이름으로 호출할 JS
+048:                 }
+049:             });
+050:     VBox root = new VBox(10);
+051:     HBox hbox = new HBox(10);
+052:     hbox.setPadding(new Insets(5));
+053:     hbox.setAlignment(Pos.CENTER);
+054:    
+055:     // hbox에 붙일 버튼 생성 및 이벤트 처리 ----->
+056:     Button btnExit = new Button("Exit");
+057:     btnExit.setOnAction(e -> {
+058:         Platform.exit();
+059:     });
+060:     Button btnAbout = new Button("WebData");
+061:     //자바에서 스크립트로 전달, 올해까지 모든 정보
+062:     btnAbout.setOnAction(v-> {
+063:     	Object obj=getJson();
+064:         webEngine.executeScript("drawLine(" + obj+ ")");
+065:     });
+066:     Button btn2017 = new Button("Web2017");
+067:     //자바에서 스크립트로 전달, 2017
+068:     btn2017.setOnAction(v-> {
+069:     	Object obj=getJson("2017","2017");
+070:         webEngine.executeScript("drawLine(" + obj+ ")");
+071:     });
+072:     Button btn2016 = new Button("Web2016");
+073:     //자바에서 스크립트로 전달, 2016
+074:     btn2016.setOnAction(v->{
+075:     	Object obj=getJson("2016","2016");
+076:         webEngine.executeScript("drawLine(" + obj+ ")");
+077:     });
+078:     Button btn2015 = new Button("Web2015");
+079:     //자바에서 스크립트로 전달, 2015
+080:     btn2015.setOnAction(v->{
+081:     	Object obj=getJson("2015","2015");
+082:         webEngine.executeScript("drawLine(" + obj+ ")");
+083:     });
+084:     Button btn2014 = new Button("Web2014");
+085:     //자바에서 스크립트로 전달, 2014
+086:     btn2014.setOnAction(v-> {
+087:     	Object obj=getJson("2014","2014");
+088:         webEngine.executeScript("drawLine(" + obj+ ")");
+089:     });
+090:     // 지진정보 읽기
+091:     Button btnReadFx = new Button("ReadFx");
+092:     btnReadFx.setOnAction(v->{
+093:     	FileChooser fileChooser = new FileChooser();
+094:         File file = fileChooser.showOpenDialog(stage);
+095:         try (BufferedReader reader = 
+096:         		        new BufferedReader(new FileReader(file))){
+097:             Object obj = JSONValue.parse(reader);
+098:             //json을 자바스트립트에 넝어서 라인을 그림
+099:             System.out.println(obj);
+100:             webEngine.executeScript("drawLine(" + obj + ")");
+101:             System.out.println("read--->"+file.getAbsolutePath());
+102:         } catch (Exception ex) {
+103:            System.out.println("read----Exception------------->"+ex);
+104:         }
+105:     });
+106:     // Refresh 버튼
+107:     Button Refresh = new Button("Refresh");
+108:     Refresh.setOnAction(v->{	
+109:      webEngine.load(url.toExternalForm());
+110:      JSObject window = (JSObject) webEngine.executeScript("window");
+111:      window.setMember("app", app= new JavaApplication(stage));
+112:     });
+113:     // hbox에 붙일 버튼 생성 및 이벤트 처리  <-----
+114:     
+115:     hbox.getChildren().addAll(btnAbout,btn2017,
+116:     		btn2016,btn2015,btn2014,btnReadFx,Refresh,btnExit);
+117:     root.getChildren().addAll(webView, hbox);
+118:     Scene scene = new Scene(root, 1220, 720);
+119:     stage.setScene(scene);
+120:     stage.show();
+121:  }
+122:  public static Object getJson(){
+123: 	return getJson("2010");
+124:  }
+125:  public static Object getJson(String fyear){
+126: 	return getJson(fyear, todate2(new Date()));
+127:  }
+128:  public static Object getJson(String fyear,String tyear){
+129: 	String [] datas=
+130: 			new String [] { ""+fyear+"-01-01",""+tyear+"-12-31","5" ,"999"};
+131: 	RequestFromKMA rfw=new RequestFromKMA();  //2017.7.7 수정
+132: 	String startTm=datas[0];
+133: 	String endTm=datas[1];
+134: 	String startSize=datas[2];
+135: 	String endSize=datas[3];
+136:     String urls=
+137: 	  "http://www.kma.go.kr/weather/earthquake_volcano/internationallist.jsp";
+138: 	String a=String.format("%s?%s&%s&%s&%s",
+139: 			urls,
+140: 			para("startTm",startTm),
+141: 			para("endTm",endTm),
+142: 			para("startSize",startSize+""),
+143: 			para("endSize",endSize+""));
+144: 	rfw.getAllHtml(a);
+145: 	System.out.println(a);
+146: 	String str="<table class=\"table_develop";
+147: 	rfw.getEarthQuakes(str);
+148: 	Object obj = JSONValue.parse(GeoPrint.toJson(rfw.getKREarthQuake()));
+149: 	return obj;
+150:  }
+151:  public static String todate2(Date dd){
+152: 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy");
+153: 	return sdf.format(dd);
+154:  }
+155:  public static String para(String key, String value){
+156: 	return String .format("%s=%s",key,value);
+157:  }
+158:  public class JavaApplication {
+159: 	Stage stage;
+160: 	public JavaApplication(Stage stage){
+161: 		this.stage=stage;
+162: 	}
+163:     public void saveJSToJavaFxFile(String msg) {
+164:     	System.out.println("----------------------->"+msg);
+165:     	FileChooser fileChooser = new FileChooser();
+166:         File file = fileChooser.showSaveDialog(this.stage);
+167:         try (BufferedWriter writer = 
+168:         		new BufferedWriter(new FileWriter(file))) {
+169:             writer.write(msg);
+170:         } catch (IOException ex) {
+171:         	System.out.println("-------------------->"+ex);
+172:         }
+173:     }
+174:  }
+175: }

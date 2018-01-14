@@ -1,0 +1,18 @@
+01: package kr.co.infopub.chapter.s145;
+02: import java.io.IOException;
+03: import java.util.Vector;
+04: public class ObjectStudentWriteMain {
+05: 	public static void main(String[] args) {
+06: 		ObjectStudentRWG<Student> osw=new ObjectStudentRWG< > ();
+07: 		Vector<Student> v=new Vector<>();
+08: 		v.add(new Student("È«±æµ¿",17,"ÇÑ¾ç"));
+09: 		v.add(new Student("È«±æ¼ø",15,"¼øÃµ"));
+10: 		v.add(new Student("¸ù·æ",20,"È­Ãµ"));
+11: 		v.add(new Student("ÃáÇâ",18,"»ïÃ´"));
+12: 		try {
+13: 			osw.write("kisul\\stu.txt",v);
+14: 		} catch (IOException e) {
+15: 			System.out.println(e);
+16: 		}
+17: 	}
+18: }

@@ -1,0 +1,54 @@
+01: package kr.co.infopub.chapter.s180;
+02: import java.io.FileWriter;
+03: import java.io.IOException;
+04: import java.io.PrintWriter;
+05: import java.util.List;
+06: import org.json.JSONArray;
+07: import org.json.JSONObject;
+10: public class GeoPrint2 {
+11:  private static String pair(Earthquake bb){
+12: 	String markerX=pair("markerX",bb.getLatitude()+"");
+13: 	String markerY=pair("markerY",bb.getLongitude()+"");
+14: 	String marknum=pair("marknum",bb.getMagnitude()+"");
+15: 	return String.format("{%s,%s,%s}",marknum, markerX,markerY);
+16:  }
+17:  private static String pair(String key, String value){
+18: 	String ss=String.format("\"%s\":\"%s\"", key,value);
+19: 	return ss;
+20:  }
+21:  public static JSONObject toJsonObject(List<Earthquake> bblist){
+22: 	JSONObject json=new JSONObject();
+23: 	JSONArray jarray=new JSONArray();
+24: 	for (int i = 0; i < bblist.size(); i++) {
+25: 		String ss=pair(bblist.get(i));
+26: 		jarray.put(ss);
+27: 	}
+28: 	json.put("loc", jarray);
+29: 	return json;
+30:  }
+31:  public static String toJson2(List<Earthquake> bblist){
+32: 	String ss="";
+33: 	ss=ss.concat("{\"loc\": [");
+34: 	for(int i=0; i<bblist.size()-1 ;i++){
+35: 		Earthquake bb=bblist.get(i);
+36: 		ss=ss.concat(pair(bb)+",");
+37: 	}
+38: 	ss=ss.concat(pair(bblist.get(bblist.size()-1 )));
+39: 	ss=ss.concat("]}");
+40: 	//System.out.println( ss);
+41: 	return ss;
+42:  }
+43:  public static void printToJSON(List<Earthquake> bblist, String fname){
+44: 	try (PrintWriter pw=new PrintWriter(new FileWriter(fname,false),true)){
+45: 		pw.println("{\"loc\": [");
+46: 		for(int i=0; i<bblist.size()-1 ;i++){
+47: 			Earthquake bb=bblist.get(i);
+48: 			pw.println(pair(bb)+",");
+49: 		}
+50: 		pw.println(pair(bblist.get(bblist.size()-1 )));
+51: 		pw.println("]}");
+52: 	} catch (IOException e) {
+53: 	    System.out.println(e);
+54: 	}
+55:  }
+56: }

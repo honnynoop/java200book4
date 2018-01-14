@@ -1,0 +1,40 @@
+01: package kr.co.infopub.chapter.s1482;
+02: import java.io.*;
+03: public class ResultWrite {
+04: 	public boolean isExist(String fname){
+05: 		boolean isE=false;
+06: 		File f=null;
+07: 		try{
+08: 			f=new File(fname);
+09: 			if(f.exists()){
+10: 				isE=true;
+11: 			}
+12: 		}catch(Exception ee){
+13: 			log(ee.getMessage());
+14: 		}
+15: 		return isE;
+16: 	}
+17: 	private static void log(String msg){
+18: 		System.out.println("Error-->:"+msg);
+19: 	}
+20: 	public void setTexts(String fname,String msg){
+21: 		FileWriter fw=null;
+22: 		PrintWriter pw=null;
+23: 		File ff=null;
+24: 		try{
+25: 			ff=new File(fname);
+26: 			fw=new FileWriter(ff,false);
+27: 			pw=new PrintWriter(fw,true);
+28: 			pw.write(msg);
+29: 		}catch(Exception ee){
+30: 			log(ee.getMessage());
+31: 		}finally{
+32: 			try{
+33: 				pw.close();
+34: 				fw.close();
+35: 			}catch(Exception eee){
+36: 				log(eee.getMessage());
+37: 			}
+38: 		}
+39: 	}
+40: }

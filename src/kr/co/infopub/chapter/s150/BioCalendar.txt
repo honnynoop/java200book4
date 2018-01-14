@@ -1,0 +1,53 @@
+01: package kr.co.infopub.chapter.s150;
+02: import java.util.Calendar;
+03: public class BioCalendar {
+04: 	//상수  
+05: 	public static final int PHYSICAL = 23;
+06: 	public static final int EMOTIONAL = 28;
+07: 	public static final int INTELLECTUAL = 33;
+08: 
+09: 	public static void main(String[] args) {
+10: 		
+11: 		  Calendar birth=Calendar.getInstance();
+12: 		  birth.set(1980,3-1,28);  // 0월 ~11월, 
+13: 		  Calendar theDay=Calendar.getInstance();   // 오늘
+14: 		  
+15: 		  long dateBirth=birth.getTimeInMillis();
+16: 		  long dateToDay=theDay.getTimeInMillis();
+17: 		  long days=(dateToDay-dateBirth)/1000/24/60/60;   // 태어난 지 몇일
+18: 		  System.out.println(days);
+19:                     // (1) 개발자가 정의한 메서드를 호출한다. 
+20: 		  double phyval=getBioRhythm( days,  PHYSICAL,     100);
+21: 		  double emoval=getBioRhythm( days,  EMOTIONAL,     100);
+22: 		  double inteval=getBioRhythm( days,  INTELLECTUAL, 100);
+23: 		  
+24: 		  System.out.printf("나의 신체지수 %1$.2f입니다.\n",phyval);
+25: 		  System.out.printf("나의 감정지수 %1$.2f입니다.\n",emoval);
+26: 		  System.out.printf("나의 지성지수 %1$.2f입니다.\n",inteval); 
+27: 	}
+28:     // (2) 개발자가 정의한 메서드
+29: 	public static double getBioRhythm(long days, int index ,int max) {
+30: 		return max*Math.sin( (days % index) * 2 * Math.PI / index );
+31: 	}
+32: 	
+33: 	public static double getPhysical(long days, int max) {
+34: 		return getBioRhythm(days,PHYSICAL,max);
+35: 	}
+36: 	public static double getEmotional(long days, int max) {
+37: 		return getBioRhythm(days,EMOTIONAL,max);
+38: 	}
+39: 	public static double getIntellectual(long days, int max) {
+40: 		return getBioRhythm(days,INTELLECTUAL,max);
+41: 	}
+42: 	
+43: 	public static long days(int year, int month, int day){
+44: 	    Calendar birth=Calendar.getInstance();
+45: 	    birth.set(year,month-1,day);  // 0월 ~11월, 
+46: 	    Calendar theDay=Calendar.getInstance();   // 오늘
+47: 	    long dateBirth=birth.getTimeInMillis();
+48: 		long dateToDay=theDay.getTimeInMillis();
+49: 	    long days=(dateToDay-dateBirth)/1000/24/60/60;   // 태어난 지 몇일
+50: 	    return days;
+51: 	}
+52: }
+53: 

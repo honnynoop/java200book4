@@ -1,0 +1,12 @@
+01: package kr.co.infopub.chapter.s142;
+02: public class   MyRunsMain{
+03: 	public static void main(String[] args) {
+04: 		MyRuns mr1=new MyRuns();
+05: 		Thread t1=new Thread(mr1,"a");
+06: 		Thread t2=new Thread(mr1,"b");
+07: 		Thread t3=new Thread(mr1,"c");
+08: 		t1.start();
+09: 		t2.start();
+10: 		t3.start();
+11: 	}
+12: }

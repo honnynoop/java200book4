@@ -1,0 +1,61 @@
+01: package kr.co.infopub.chapter.s178;
+02: import java.io.Serializable;
+03: public class KREarthQuake implements Serializable {
+04: 	
+05: 	private double latitude;
+06: 	private double longitude;
+07: 	private String time;
+08: 	private String location;
+09: 	private double magnitude;
+10: 
+11: 	public KREarthQuake() {
+12: 		super();
+13: 	}
+14: 	public KREarthQuake(double latitude, double longitude, String time,
+15: 						String location, double magnitude) {
+16: 		super();
+17: 		this.latitude = latitude;
+18: 		this.longitude = longitude;
+19: 		this.time = time;
+20: 		this.location = location;
+21: 		this.magnitude = magnitude;
+22: 	}
+23: 	@Override
+24: 	public String toString() {
+25: 		return "KREarthQuake [latitude=" + latitude + ", longitude="
+26: 				+ longitude + ", time=" + time + ", location=" + location
+27: 				+ ", magnitude=" + magnitude + "]";
+28: 	}
+29: 	public double getLatitude() {
+30: 		return latitude;
+31: 	}
+32: 	public void setLatitude(double latitude) {
+33: 		this.latitude = latitude;
+34: 	}
+35: 	public double getLongitude() {
+36: 		return longitude;
+37: 	}
+38: 	public void setLongitude(double longitude) {
+39: 		this.longitude = longitude;
+40: 	}
+41: 	public String getTime() {
+42: 		return time;
+43: 	}
+44: 	public void setTime(String time) {
+45: 		this.time = time;
+46: 	}
+47: 	public String getLocation() {
+48: 		return location;
+49: 	}
+50: 	public void setLocation(String location) {
+51: 		this.location = location;
+52: 	}
+53: 	public double getMagnitude() {
+54: 		return magnitude;
+55: 	}
+56: 	public void setMagnitude(double magnitude) {
+57: 		this.magnitude = magnitude;
+58: 	}
+59: 	
+60: 	
+61: }

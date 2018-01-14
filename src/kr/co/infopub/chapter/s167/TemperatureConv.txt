@@ -1,0 +1,18 @@
+01: package kr.co.infopub.chapter.s167;
+02: public class TemperatureConv {
+03:  public static double toCelsius(double fahrenheit){
+04: 	return 5./9 *(fahrenheit-32);
+05:  }
+06:  public static double toFahrenheit(double celsius){
+07: 	return 9.0/5*celsius+32;
+08:  }
+09:  public static void main(String[] args) {
+10: 	double celsius=29;
+11: 	double fahrenheit=0.0;
+12: 	fahrenheit=toFahrenheit(celsius);
+13: 	System.out.printf("%.2f ¼·¾¾= %.2f È­¾¾.\n",celsius,fahrenheit);
+14: 	
+15: 	celsius=toCelsius(fahrenheit);
+16: 	System.out.printf("%.2f È­¾¾= %.2f ¼·¾¾.\n",fahrenheit,celsius);
+17:  }
+18: }

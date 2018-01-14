@@ -1,0 +1,112 @@
+001: package kr.co.infopub.chapter.s160;
+002: import javafx.beans.value.ObservableValue;
+003: import javafx.event.ActionEvent;
+004: import javafx.fxml.FXML;
+005: import javafx.scene.control.Button;
+006: import javafx.scene.control.ComboBox;
+007: import javafx.scene.control.Label;
+008: import javafx.scene.control.RadioButton;
+009: import javafx.scene.control.TextField;
+010: public class ExchangeRateFxController {
+011:     @FXML
+012:     private Label lbfrom;
+013:     @FXML
+014:     private TextField tffrom;
+015:     @FXML
+016:     private TextField tfjpy;
+017:     @FXML
+018:     private Label lbto;
+019:     @FXML
+020:     private RadioButton rdother;
+021:     @FXML
+022:     private ComboBox<String> cbfinance;
+023:     @FXML
+024:     private TextField tfusd;
+025:     @FXML
+026:     private Button btncon;
+027:     @FXML
+028:     private TextField tfto;
+029:     @FXML
+030:     private RadioButton rdkrw;
+031:     @FXML
+032:     private TextField tfcny;
+033:     @FXML
+034:     private Label lbboard;
+035:     //static 변환 메서드
+036: 	public static double fromKRW(double krwMoney, double exchangeRatio){
+037: 		return krwMoney/exchangeRatio;
+038: 	}
+039: 	public static double toKRW(double otherMoney, double exchangeRatio){
+040: 		return otherMoney*exchangeRatio;
+041: 	}
+042: 	public static double toD(String s){
+043: 		if(s==null || s.equals("")){
+044: 			return 0.0;
+045: 		}else {
+046: 			return Double.parseDouble(s.trim());
+047: 		}
+048: 	}
+049:     @FXML
+050:     void initialize() {
+051:     	cbfinance.getItems().addAll("USD","JPY","CNY");
+052:     }
+053:     //콤보박스의 아이템을 선택
+054:     @FXML
+055:     void cbdistanceOnAction(ActionEvent event) {
+056:     	if(rdother.isSelected()){
+057:     		String value = (String) cbfinance.getValue();
+058:         	lbto.setText(value);
+059:         	lbfrom.setText("KRW");
+060:         	String krwMoney=tffrom.getText().equals("")?"0.0":tffrom.getText().trim();
+061:         	double exchangeRatio=1.0;
+062:         	if(value.equals("USD")){
+063:         		exchangeRatio=toD(tfusd.getText().trim());
+064:         	}else if(value.equals("JPY")){
+065:         		exchangeRatio=toD(tfjpy.getText().trim());
+066:         	}else if(value.equals("CNY")){
+067:         		exchangeRatio=toD(tfcny.getText().trim());
+068:         	}
+069:         	double d=fromKRW(toD(krwMoney),exchangeRatio );
+070:     		tfto.setText(String.format("%.2f", d));
+071:     	}else{
+072:     		String value = (String) cbfinance.getValue();
+073:         	lbfrom.setText(value);
+074:         	lbto.setText("KRW");
+075:         	String otherMoney=tffrom.getText().equals("")?"0.0":tffrom.getText().trim();
+076:         	double exchangeRatio=1.0;
+077:         	if(value.equals("USD")){
+078:         		exchangeRatio=toD(tfusd.getText().trim());
+079:         	}else if(value.equals("JPY")){
+080:         		exchangeRatio=toD(tfjpy.getText().trim());
+081:         	}else if(value.equals("CNY")){
+082:         		exchangeRatio=toD(tfcny.getText().trim());
+083:         	}
+084:         	double d=toKRW(toD(otherMoney),exchangeRatio );
+085:     		tfto.setText(String.format("%.2f", d));
+086:     	}
+087:     }
+088:     @FXML
+089:     void onConvertAction(ActionEvent event) {
+090:     	//미국 달러
+091:     	String you="USD";      //미국 달러 
+092: 		String date=RestDay.todates();
+093: 		FixerRate finance=FixerConvert.convert(date, you); 
+094: 		tfusd.setText(finance.krw+"");   
+095: 		//일본 엔
+096: 		you="JPY";
+097: 		finance=FixerConvert.convert(date, you); 
+098: 		tfjpy.setText(finance.krw+"");   
+099: 		//중국 위엔
+100: 		you="CNY";
+101: 		finance=FixerConvert.convert(date, you); 
+102: 		tfcny.setText(finance.krw+"");   
+103:     }
+104:     //라디오-다른 국가의 화폐로 환전
+105:     @FXML
+106:     void onOtherAction(ActionEvent event) {}
+107:     //라디오-한화로 환전
+108:     @FXML
+109:     void onKrwAction(ActionEvent event) {}
+110:     //최신 환율 가져오기
+111: }
+112: 

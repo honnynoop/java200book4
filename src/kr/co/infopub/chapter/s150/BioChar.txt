@@ -1,0 +1,30 @@
+01: <?xml version="1.0" encoding="UTF-8"?>
+02: <?import javafx.scene.chart.*?>
+03: <?import javafx.scene.control.*?>
+04: <?import java.lang.*?>
+05: <?import javafx.scene.layout.*?>
+06: <?import javafx.scene.layout.BorderPane?>
+07: <BorderPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
+08:  fx:controller="kr.co.infopub.chapter.s150.BioCharontroller">
+09:    <center>
+10:       <BorderPane prefHeight="600.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+11:          <center>
+12:             <LineChart fx:id="lineChart" BorderPane.alignment="CENTER" >
+13:               <xAxis>
+14:                 <CategoryAxis fx:id="xAxis" side="BOTTOM" />
+15:               </xAxis>
+16:               <yAxis>
+17:                 <NumberAxis fx:id="yAxis"  side="LEFT" />
+18:               </yAxis>
+19:             </LineChart>
+20:          </center></BorderPane>
+21:    </center>
+22:    <top>
+23:       <AnchorPane prefHeight="200.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+24:          <children>
+25:             <DatePicker fx:id="dateTime" layoutX="217.0" layoutY="71.0" onAction="#onDateTimeClick" prefHeight="29.0" prefWidth="326.0" promptText="?ƒ?¼" />
+26:             <Label layoutX="52.0" layoutY="76.0" prefHeight="19.0" prefWidth="147.0" text="?ƒ?¼?„ ?„ ?ƒ?•˜?„¸?š”" />
+27:          </children>
+28:       </AnchorPane>
+29:    </top>
+30: </BorderPane>

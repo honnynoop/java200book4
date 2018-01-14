@@ -1,0 +1,81 @@
+01: <?xml version="1.0" encoding="UTF-8"?>
+02: 
+03: <?import javafx.scene.text.*?>
+04: <?import javafx.scene.control.*?>
+05: <?import javafx.geometry.*?>
+06: <?import java.lang.*?>
+07: <?import javafx.scene.layout.*?>
+08: <?import javafx.scene.layout.BorderPane?>
+09: <?import javafx.scene.Group?>
+10: 
+11: <BorderPane prefHeight="347.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kr.co.infopub.chapter.s159.ExchangeRateFxController">
+12:    <right>
+13:       <AnchorPane prefHeight="347.0" prefWidth="754.0" BorderPane.alignment="CENTER">
+14:          <BorderPane.margin>
+15:             <Insets />
+16:          </BorderPane.margin>
+17:          <children>
+18:             <Label fx:id="lbfrom" layoutX="251.0" layoutY="216.0" text="KRW" AnchorPane.leftAnchor="251.0">
+19:                <font>
+20:                   <Font size="18.0" />
+21:                </font>
+22:             </Label>
+23:             <TextField fx:id="tffrom" layoutX="18.0" layoutY="212.0" prefHeight="29.0" prefWidth="208.0" promptText="?™˜? „?•˜? ¤?Š” ê¸ˆì•¡" AnchorPane.leftAnchor="18.0" />
+24:             <ComboBox fx:id="cbfinance" layoutX="312.0" layoutY="212.0" onAction="#cbdistanceOnAction" prefHeight="29.0" prefWidth="97.0" promptText="êµ?ê°?" AnchorPane.leftAnchor="312.0" />
+25:             <TextField fx:id="tfusd" editable="false" layoutX="32.0" layoutY="130.0" prefHeight="30.0" prefWidth="160.0" promptText="USD" AnchorPane.leftAnchor="20.0" />
+26:             <Label fx:id="lbboard" alignment="CENTER" layoutX="20.0" layoutY="35.0" prefHeight="28.0" prefWidth="520.0" text="?™˜?œ¨ ?ƒ?™©" AnchorPane.leftAnchor="20.0">
+27:                <font>
+28:                   <Font size="24.0" />
+29:                </font>
+30:             </Label>
+31:             <Label layoutX="95.0" layoutY="79.0" text="1 USD" AnchorPane.leftAnchor="95.0">
+32:                <font>
+33:                   <Font size="18.0" />
+34:                </font>
+35:             </Label>
+36:             <TextField fx:id="tfjpy" editable="false" layoutX="270.0" layoutY="130.0" prefHeight="30.0" prefWidth="160.0" promptText="JPY" />
+37:             <TextField fx:id="tfcny" editable="false" layoutX="535.0" layoutY="131.0" prefHeight="30.0" prefWidth="160.0" promptText="CNY" AnchorPane.rightAnchor="59.0" />
+38:             <Label layoutX="343.0" layoutY="79.0" text="1 JPY" AnchorPane.leftAnchor="343.0">
+39:                <font>
+40:                   <Font size="18.0" />
+41:                </font>
+42:             </Label>
+43:             <Label layoutX="610.0" layoutY="79.0" text="1 CNY">
+44:                <font>
+45:                   <Font size="18.0" />
+46:                </font>
+47:             </Label>
+48:             <Button fx:id="btncon" layoutX="589.0" layoutY="34.0" mnemonicParsing="false" onAction="#onConvertAction" prefHeight="29.0" prefWidth="137.0" text="?˜„?ž¬?™˜?œ¨" />
+49:             <TextField fx:id="tfto" layoutX="436.0" layoutY="212.0" prefHeight="29.0" prefWidth="208.0" promptText="?™˜? „?œ ê¸ˆì•¡" />
+50:             <Label fx:id="lbto" layoutX="669.0" layoutY="216.0" text="USD">
+51:                <font>
+52:                   <Font size="18.0" />
+53:                </font>
+54:             </Label>
+55:             
+56:         <RadioButton fx:id="rdother" layoutX="196.0" layoutY="274.0" mnemonicParsing="false" onAction="#onOtherAction" selected="true" text="?‹¤ë¥? êµ?ê°??™”?ë¡? ?™˜? „">
+57:                <toggleGroup>
+58:                   <ToggleGroup fx:id="toggle" />
+59:                </toggleGroup></RadioButton>
+60:                 <RadioButton fx:id="rdkrw" layoutX="419.0" layoutY="274.0" mnemonicParsing="false" onAction="#onKrwAction" text="???•œë¯¼êµ­ ?•œ?™”ë¡? ?™˜? „" toggleGroup="$toggle" />
+61:             <Label layoutX="186.0" layoutY="135.0" text="KRW">
+62:                <font>
+63:                   <Font size="18.0" />
+64:                </font>
+65:             </Label>
+66:             <Label layoutX="436.0" layoutY="135.0" text="KRW">
+67:                <font>
+68:                   <Font size="18.0" />
+69:                </font>
+70:             </Label>
+71:             <Label layoutX="699.0" layoutY="135.0" text="KRW">
+72:                <font>
+73:                   <Font size="18.0" />
+74:                </font>
+75:             </Label>
+76:            
+77:             
+78:          </children>
+79:       </AnchorPane>
+80:    </right>
+81: </BorderPane>

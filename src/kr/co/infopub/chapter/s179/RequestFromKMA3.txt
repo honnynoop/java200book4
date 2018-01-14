@@ -1,0 +1,281 @@
+001: package kr.co.infopub.chapter.s179;
+002: 
+003: import java.io.BufferedInputStream;
+004: import java.io.BufferedReader;
+005: import java.io.FileWriter;
+006: import java.io.IOException;
+007: import java.io.InputStream;
+008: import java.io.InputStreamReader;
+009: import java.io.PrintWriter;
+010: import java.net.HttpURLConnection;
+011: import java.net.URL;
+012: import java.text.ParseException;
+013: import java.text.SimpleDateFormat;
+014: import java.util.ArrayList;
+015: import java.util.Calendar;
+016: import java.util.Date;
+017: import java.util.HashMap;
+018: /**
+019:  * 2017.4.4 새로 수정
+020:  * 국외 지진정보-2017년에 서비스가 수정되어 
+021:  * http://www.kma.go.kr/weather/earthquake_volcano/internationallist.jsp?startTm=2010-01-01&endTm=2017-04-04&startSize=3
+022:  * @author HYJ
+023:  */
+024: public class RequestFromKMA3 {
+025: 	
+026: 	ArrayList<String> htmls=new ArrayList<String>();
+027: 	ArrayList<KREarthQuake> kREarthQuakes=new ArrayList<KREarthQuake>();
+028: 	public RequestFromKMA3() {
+029: 		htmls.clear();
+030: 		kREarthQuakes.clear();
+031: 	}
+032: 
+033: 	public ArrayList<KREarthQuake> getKREarthQuake() {
+034: 		return kREarthQuakes;
+035: 	}
+036: 
+037: 	boolean isConnection=false;
+038: 	
+039: 	public void getAllHtml(String newUrls){
+040: 		htmls.clear();
+041: 		InputStream inputStream;
+042: 		URL url=null;
+043: 		try {
+044: 			url= new URL(newUrls);
+045: 			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+046: 	
+047: 			inputStream = new BufferedInputStream(urlConnection.getInputStream());
+048: 			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "euc-kr"), 8);
+049: 	
+050: 			String line = null;
+051: 			while ((line = reader.readLine()) != null)
+052: 			{
+053: 				if(!line.trim().equals("")){
+054: 
+055: 					htmls.add(line.trim());
+056: 					//System.out.println(line.trim());
+057: 				}
+058: 			}
+059: 			isConnection=true;
+060: 			inputStream.close();
+061: 
+062: 		} catch (Exception e) {
+063: 			isConnection = false;
+064: 			System.out.println(e);
+065: 		} 
+066: 	}
+067: 	
+068: 	public String rm(String msg){
+069: 		String mt=msg.substring(0, msg.lastIndexOf("<"));
+070: 		mt=mt.substring(mt.indexOf(">")+1);
+071: 		return mt.trim();
+072: 	}
+073: 	public String toD(String msg){
+074: 		return msg.replace("/", "-");
+075: 	}
+076: 	public String toD1(String msg){
+077: 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+078: 		Date dd=new Date();
+079: 		try {
+080: 			 dd=sdf.parse(msg);
+081: 		} catch (ParseException e) {
+082: 			
+083: 		}
+084: 		SimpleDateFormat sdf2=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+085: 		return sdf2.format(dd);
+086: 	}
+087: 	
+088: 	public String toM(String msg){
+089: 		String mt="";
+090: 		if(msg.contains("N") || msg.contains("E")){
+091: 			mt=msg.replaceAll("N", "");
+092: 			mt=mt.replaceAll("E", "");
+093: 			mt=mt.trim();
+094: 		}else{
+095: 			mt=msg.replaceAll("S", "");
+096: 			mt=mt.replaceAll("W", "");
+097: 			mt="-"+mt.trim();
+098: 		}
+099: 		
+100: 		return mt.trim();
+101: 	}
+102: 	public double toDb(String msg){
+103: 		return Double.parseDouble(msg);
+104: 	}
+105: 	
+106: 	public synchronized void getEarthQuakes(String msg){
+107: 		kREarthQuakes.clear();
+108: 		int count=0;
+109: 		
+110: 		for (int i=0; i<htmls.size(); i++) {
+111: 			String ss=htmls.get(i);
+112: 			if(ss.contains(msg)){  
+113: 				//System.out.println(i+": "+ss);
+114: 				count++ ;
+115: 			    break;
+116: 			}
+117: 		}
+118: 		int k=1;
+119: 		for (int i=count; i<htmls.size(); i++) {
+120: 			String ss=htmls.get(i+k);
+121: 			if(ss.contains("<tbody>")){  
+122: 				//System.out.println(ss);
+123: 				k++;
+124: 			    break;
+125: 			}
+126: 		}
+127: 		//System.out.println(k+"------------------------------");
+128: 		for (int i=count+k; i<htmls.size(); i++) {
+129: 			
+130: 			String ss=htmls.get(i);
+131: 			String tt=htmls.get(i+1);
+132: 			//System.out.println(ss);
+133: 			if(ss.contains("<tr>") && tt.contains("<td>") ){  
+134: 				System.out.println(ss);
+135: 				String a=htmls.get(i+1);
+136: 				String b=htmls.get(i+2);
+137: 				String c=htmls.get(i+3);
+138: 				
+139: 				String d=htmls.get(i+4);
+140: 				String e=htmls.get(i+5);
+141: 				String f=htmls.get(i+6);
+142: 				
+143: 				//System.out.println(d+"<------>");
+144: 				if(d.trim().contains("-") || e.trim().contains("-")){ 
+145: 					continue;  //i++ 다음스텝
+146: 				}else{
+147: 					try {
+148: 						KREarthQuake quake =new KREarthQuake(
+149: 								toDb(toM(rm(d))),   //latitude
+150: 								toDb(toM(rm(e))),   //longitude
+151: 								toD(rm(b)),        //time
+152: 								rm(f),             //location
+153: 								toDb(rm(c))       //magnitude
+154: 								);
+155: 						kREarthQuakes.add(quake);
+156: 					} catch (Exception e2) {
+157: 						//System.out.println(e2);
+158: 					}
+159: 					
+160: 				}
+161: 				
+162: 				
+163: //				System.out.println(rm(a));
+164: //				System.out.println(toD(rm(b)));
+165: //				System.out.println(toDb(rm(c)));
+166: //				System.out.println(toM(rm(d)));
+167: //				System.out.println(toM(rm(e)));
+168: //				System.out.println(rm(f));
+169: 				//System.out.println("----------------------------------");
+170: 		//System.out.println( i+ "----------------------------------");
+171: 			}
+172: 			if(ss.contains("</tbody>")){  
+173: 				break;
+174: 			}
+175: 		}
+176: 		
+177: 	}
+178: 			
+179: 		
+180: 	
+181: 	public void printHtml(){
+182: 		for (String dto : htmls) {
+183: 			System.out.println(dto);
+184: 		}
+185: 	}
+186: 	public void printEarthQuake(){
+187: 		for (KREarthQuake dto : kREarthQuakes) {
+188: 			System.out.println(dto);
+189: 		}
+190: 	}
+191: 	public static String q(String msg){
+192: 		return "\""+msg+"\"";
+193: 	}
+194: 	public void printToObject(String s){
+195: 		PrintWriter pw=null;
+196: 		try {
+197: 			pw=new PrintWriter(new FileWriter(s, false),true);
+198: 			for (KREarthQuake dto : kREarthQuakes) {
+199: 				String ss=String.format("kREarthQuakes.add(new KREarthQuake(%f,%f,%s,%s,%f));"
+200: 						, dto.getLatitude(),dto.getLongitude(),
+201: 						q(dto.getTime()),
+202: 						q(dto.getLocation()),
+203: 						dto.getMagnitude());
+204: 				pw.println(ss);		
+205: 			}
+206: 			pw.close();
+207: 		} catch (IOException e) {
+208: 			
+209: 		}
+210: 	}
+211: 	public void printTocsv(String s){
+212: 		PrintWriter pw=null;
+213: 		try {
+214: 			pw=new PrintWriter(new FileWriter(s, false),true);
+215: 			for (KREarthQuake dto : kREarthQuakes) {
+216: 				String ss=String.format("%f,%f,%s,%s,%f",
+217: 						dto.getLatitude(),
+218: 						dto.getLongitude(),
+219: 						dto.getTime(),
+220: 						dto.getLocation(),
+221: 						dto.getMagnitude());
+222: 				pw.println(ss);		
+223: 			}
+224: 			pw.close();
+225: 		} catch (IOException e) {
+226: 			
+227: 		}
+228: 	}
+229: 
+230: 	public Date todate2(String ss){
+231: 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd hh24:mm:ss");
+232: 		Date dd=new Date();
+233: 		try {
+234: 			dd=sdf.parse(ss);
+235: 		} catch (ParseException e) {
+236: 		}
+237: 		return dd;
+238: 	}
+239: 	public static Date todate1(String ss){
+240: 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+241: 		Date dd=new Date();
+242: 		try {
+243: 			dd=sdf.parse(ss);
+244: 		} catch (ParseException e) {
+245: 		}
+246: 		return dd;
+247: 	}
+248: 	public static String todate2(Date dd){
+249: 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+250: 		return sdf.format(dd);
+251: 	}
+252: 	public static String para(String key, String value){
+253: 		return String .format("%s=%s",key,value);
+254: 	}
+255: 
+256: 	public static void main(String[] args) {
+257: 		String [] datas=new String [] { "2015-01-01",todate2(new Date()),"5" ,"999"};
+258: 		RequestFromKMA3 rfw=new RequestFromKMA3();
+259: 		String startTm=datas[0];
+260: 		String endTm=datas[1];
+261: 		String startSize=datas[2];
+262: 		String endSize=datas[3];
+263: 		String urls="http://www.kma.go.kr/weather/earthquake_volcano/internationallist.jsp";
+264: 		String a=String.format("%s?%s&%s&%s&%s",
+265: 				urls,
+266: 				para("startTm",startTm),
+267: 				para("endTm",endTm),
+268: 				para("startSize",startSize+""),
+269: 				para("endSize",endSize+""));
+270: 		//System.out.println(a);
+271: 
+272: 		rfw.getAllHtml(a);
+273: 		//rfw.printHtml();
+274: 		
+275: 		String str="<table class=\"table_develop";
+276: 		rfw.getEarthQuakes(str);
+277:         //rfw.printEarthQuake();
+278:        
+279: 	   //GeoPrint.printToJSON(rfw.getKREarthQuake(), "loc2.json");
+280: 	}
+281: }

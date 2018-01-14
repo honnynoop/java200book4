@@ -1,0 +1,58 @@
+01: <?xml version="1.0" encoding="UTF-8"?>
+02: 
+03: <?import javafx.scene.text.*?>
+04: <?import javafx.scene.control.*?>
+05: <?import javafx.geometry.*?>
+06: <?import java.lang.*?>
+07: <?import javafx.scene.layout.*?>
+08: <?import javafx.scene.layout.BorderPane?>
+09: 
+10: <BorderPane prefHeight="347.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kr.co.infopub.chapter.s166.DistanceConversionFxController">
+11:    <center>
+12:       <AnchorPane prefHeight="332.0" prefWidth="691.0" BorderPane.alignment="CENTER">
+13:          <BorderPane.margin>
+14:             <Insets />
+15:          </BorderPane.margin>
+16:          <children>
+17:             <Label layoutX="69.0" layoutY="146.0" text="Cm" AnchorPane.leftAnchor="69.0">
+18:                <font>
+19:                   <Font size="18.0" />
+20:                </font>
+21:             </Label>
+22:             <TextField fx:id="tfcm" layoutX="118.0" layoutY="142.0" prefHeight="29.0" prefWidth="200.0" AnchorPane.leftAnchor="118.0" />
+23:             <TextField fx:id="tfinput" layoutX="81.0" layoutY="80.0" prefHeight="29.0" prefWidth="237.0" promptText="?™˜?‚°?•˜? ¤?Š” ê°’ì„ ?ž…? ¥?•˜?„¸?š”" AnchorPane.leftAnchor="81.0" />
+24:             <ComboBox fx:id="cbdistance" layoutX="386.0" layoutY="80.0" onAction="#cbdistanceOnAction" prefHeight="29.0" prefWidth="258.0" promptText="ê±°ë¦¬?‹¨?œ„ë¥? ?„ ?ƒ?•˜?„¸?š”" AnchorPane.leftAnchor="386.0" />
+25:             <TextField fx:id="tfm" layoutX="434.0" layoutY="142.0" prefHeight="29.0" prefWidth="207.0" AnchorPane.leftAnchor="434.0" />
+26:             <Label layoutX="378.0" layoutY="146.0" text="M" AnchorPane.leftAnchor="378.0">
+27:                <font>
+28:                   <Font size="18.0" />
+29:                </font>
+30:             </Label>
+31:             <Label layoutX="377.0" layoutY="190.0" text="Feet" AnchorPane.leftAnchor="378.0">
+32:                <font>
+33:                   <Font size="18.0" />
+34:                </font>
+35:             </Label>
+36:             <TextField fx:id="tffeet" layoutX="434.0" layoutY="186.0" prefHeight="29.0" prefWidth="207.0" AnchorPane.leftAnchor="434.0" />
+37:             <TextField fx:id="tfinch" layoutX="118.0" layoutY="186.0" prefHeight="29.0" prefWidth="200.0" AnchorPane.leftAnchor="118.0" />
+38:             <Label layoutX="68.0" layoutY="190.0" text="Inch" AnchorPane.leftAnchor="69.0">
+39:                <font>
+40:                   <Font size="18.0" />
+41:                </font>
+42:             </Label>
+43:             <Label layoutX="68.0" layoutY="233.0" text="Yard" AnchorPane.leftAnchor="69.0">
+44:                <font>
+45:                   <Font size="18.0" />
+46:                </font>
+47:             </Label>
+48:             <TextField fx:id="tfyard" layoutX="118.0" layoutY="229.0" prefHeight="29.0" prefWidth="200.0" AnchorPane.leftAnchor="118.0" />
+49:             <TextField fx:id="tfmile" layoutX="436.0" layoutY="229.0" prefHeight="29.0" prefWidth="205.0" AnchorPane.leftAnchor="434.0" />
+50:             <Label layoutX="377.0" layoutY="233.0" text="Mile" AnchorPane.leftAnchor="378.0">
+51:                <font>
+52:                   <Font size="18.0" />
+53:                </font>
+54:             </Label>
+55:          </children>
+56:       </AnchorPane>
+57:    </center>
+58: </BorderPane>

@@ -1,0 +1,53 @@
+01: package kr.co.infopub.chapter.s161;
+02: 
+03: import javafx.application.Application;
+04: import javafx.scene.Scene;
+05: import javafx.scene.chart.CategoryAxis;
+06: import javafx.scene.chart.LineChart;
+07: import javafx.scene.chart.NumberAxis;
+08: import javafx.scene.chart.XYChart;
+09: import javafx.stage.Stage;
+10: 
+11: public class ExchangeLineChart extends Application{
+12:   public static void main(String[] args) {
+13:     launch(args);
+14:   }
+15:   int range=50;
+16:   @Override
+17:   public void start(Stage primaryStage) {
+18: 	primaryStage.setTitle("Exchange Rate");  
+19: 	String date=RestDay.todates();  // 오늘
+20: 	String base="USD";              // 1달러당 환율
+21: 	
+22: 	CategoryAxis xAxis = new CategoryAxis();         // X축-날짜
+23: 	NumberAxis yAxis = new NumberAxis(1080,1180,10); // Y축-환율
+24: 	yAxis.setLabel("KRW / 1 "+base);   // Y축 라벨
+25: 	xAxis.setLabel("Date");                          // X축 라벨
+26: 	LineChart<String, Number> lineChart = 
+27: 			new LineChart<String, Number>(xAxis, yAxis); // 좌표
+28: 	lineChart.setTitle("Exchange Rate "+date);
+29: 
+30: 	XYChart.Series<String, Number> series1 = 
+31: 			   new XYChart.Series<String, Number>(); //(X, Y) 점들
+32: 	physicalChartData(series1,base, date);
+33: 	
+34: 	Scene scene = new Scene(lineChart, 1400, 800);
+35:     lineChart.getData().addAll(series1);    // 좌표에  (X, y)점 붙일준비 
+36:     primaryStage.setScene(scene);
+37:     primaryStage.show();
+38:   }
+39:   public  void physicalChartData(
+40: 		  XYChart.Series<String, Number> series1, 
+41: 		  String base,String date ) {
+42:     series1.setName("KRW");
+43:     for (int i = -range; i < 1; i++) {
+44:     	String todays=RestDay.toWantedDay(date,i);  // 오늘에서 i일전날
+45:     	if(!RestDay.isRest(todays)){     //토, 일요일 제외
+46:     		// 날짜별 환율정보 객체 얻기
+47:     		FixerRate fixerrate=FixerConvert.convert(todays,base);
+48: 	    	series1.getData().add(  // (X,Y)->(날짜, 환율) 점 붙이기
+49: 	    	new XYChart.Data<String, Number>(todays, fixerrate.krw));
+50:     	}
+51:     }
+52:   }
+53: }

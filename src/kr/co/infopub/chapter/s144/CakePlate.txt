@@ -1,0 +1,28 @@
+01: package kr.co.infopub.chapter.s144;
+02: public class CakePlate {
+03: 	private int breadCount=0;
+04: 	public CakePlate() {
+05: 	}
+06: 	public synchronized void makeBread(){
+07: 		if(breadCount>=10){
+08: 			try{
+09: 				System.out.println("»§ÀÌ ³²´Â´Ù.");
+10: 				wait();
+11: 			}catch(InterruptedException ire){}
+12: 		}
+13: 		breadCount++;  // »§ÀÌ 10°³°¡ ¾ÈµÇ¸é ´õ ¸¸µéÀÚ.
+14: 		System.out.println("»§À» 1°³ ´õ ¸¸µë  ÃÑ : "+breadCount+"°³");
+15: 		this.notifyAll();
+16: 	}
+17: 	public synchronized void eatBread(){
+18: 		if(breadCount<1){
+19: 			try{
+20: 				System.out.println("»§ÀÌ ¸ðÀÚ¶ó ±â´Ù¸²");
+21: 				wait();
+22: 			}catch(InterruptedException ire){}
+23: 		}
+24: 		breadCount--;  // »§ÀÌ ÀÖÀ¸´Ï ¸ÔÀÚ.
+25: 		System.out.println("»§À» 1°³ ¸ÔÀ½  ÃÑ : "+breadCount+"°³");
+26: 		this.notifyAll();
+27: 	}
+28: }

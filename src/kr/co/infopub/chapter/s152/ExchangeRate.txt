@@ -1,0 +1,19 @@
+01: package kr.co.infopub.chapter.s152;
+02: // 메서드
+03: public class ExchangeRate {
+04: 	//나누는 행위를 반복 -> 메서드로 만든다.
+05: 	public static double calculate(double krwMoney, double exchangeRatio){
+06: 		return krwMoney/exchangeRatio;
+07: 	}
+08: 	public static void main(String[] args) {
+09: 		final double USD=1113.00;    //상수값
+10: 		final double JPY=10.0624;    //상수값 
+11: 		double krw=1000000;          //변수값
+12: 		//계산1 - 메서드 호출
+13: 		double result=calculate(krw,USD);
+14: 		System.out.printf("한화 %.2f원은 미국달러로 %.2f달러 입니다.\n",krw,result);
+15: 		//계산2 - 메서드 호출
+16: 		result=calculate(krw,JPY);  //일본100엔 1006.24원
+17: 		System.out.printf("한화 %.2f원은 일본엔화로 %.2f엔 입니다.\n",krw,result);
+18: 	}
+19: }

@@ -1,0 +1,109 @@
+001: package kr.co.infopub.chapter.s162;
+002: import org.json.JSONArray;
+003: import org.json.JSONObject;
+004: import java.io.InputStreamReader;
+005: import java.net.URL;
+006: import java.io.BufferedReader;
+007: import java.io.FileWriter;
+008: import java.io.IOException;
+009: // 1. FixerConvert를 실행시켜 오늘까지의 주식을 저장한다.
+010: public class FixerConvert {
+011: 	public static FixerRate convert(String date,String base) {
+012: 		BufferedReader br=null;
+013: 		String newUrls1 = "http://api.fixer.io/%s?base=%s";
+014: 		String newUrls=String.format(newUrls1, date,base);
+015: 		FixerRate fixerrate=null;
+016: 		URL url=null;
+017: 		try {
+018: 			url=new URL(newUrls); // http://api.fixer.io
+019: 			System.out.println(newUrls);
+020: 			br=new BufferedReader(new InputStreamReader(url.openStream(),"utf-8"));
+021: 			StringBuffer sb=new StringBuffer();
+022: 			String msg="";
+023: 			// http://api.fixer.io/2017-06-09?base=USD 를 읽어 들인다.
+024: 			while((msg=br.readLine())!=null){
+025: 				sb.append(msg);
+026: 			}
+027: 			// json으로 바꾼후 객체에 담는다.
+028: 			fixerrate=parseJSON(sb.toString(), base);
+029: 			//System.out.println(fixerrate);
+030: 		} catch (Exception e) {
+031: 			
+032: 		}
+033: 		return fixerrate;
+034: 	}
+035: 	public static FixerRate  parseJSON(String  data,String base) throws Exception{
+036: 		JSONObject jObject = new JSONObject(data);
+037: 		JSONObject rates=jObject.getJSONObject("rates");
+038: 		FixerRate fixerrate=new FixerRate();
+039: 		fixerrate.date=jObject.getString("date");
+040: 		fixerrate.base=jObject.getString("base");
+041: 		if(base.equals("USD")){
+042: 			fixerrate.usd=1.0;
+043: 			fixerrate.krw=rates.getDouble("KRW");
+044: 			fixerrate.jpy=rates.getDouble("JPY");
+045: 			fixerrate.eur=rates.getDouble("EUR");
+046: 			fixerrate.cny=rates.getDouble("CNY");
+047: 		}else if(base.equals("KRW")){
+048: 			fixerrate.usd=rates.getDouble("USD");
+049: 			fixerrate.krw=1.0;
+050: 			fixerrate.jpy=rates.getDouble("JPY");
+051: 			fixerrate.eur=rates.getDouble("EUR");
+052: 			fixerrate.cny=rates.getDouble("CNY");
+053: 		}else if(base.equals("JPY")){
+054: 			fixerrate.usd=rates.getDouble("USD");
+055: 			fixerrate.krw=rates.getDouble("KRW");
+056: 			fixerrate.jpy=1.0;
+057: 			fixerrate.eur=rates.getDouble("EUR");
+058: 			fixerrate.cny=rates.getDouble("CNY");
+059: 		}  else if(base.equals("EUR")){
+060: 			fixerrate.usd=rates.getDouble("USD");
+061: 			fixerrate.krw=rates.getDouble("KRW");
+062: 			fixerrate.jpy=rates.getDouble("JPY");
+063: 			fixerrate.eur=1.0;
+064: 			fixerrate.cny=rates.getDouble("CNY");
+065: 		} else if(base.equals("CNY")){
+066: 			fixerrate.usd=rates.getDouble("USD");
+067: 			fixerrate.krw=rates.getDouble("KRW");
+068: 			fixerrate.jpy=rates.getDouble("JPY");
+069: 			fixerrate.eur=rates.getDouble("EUR");
+070: 			fixerrate.cny=1.0;
+071: 		}	
+072: 		return fixerrate;
+073: 	}
+074: 	public static JSONObject toJson(FixerRate fixerrate){
+075: 		JSONObject obj = new JSONObject();
+076:         obj.put("USD", fixerrate.usd);
+077:         obj.put("KRW", fixerrate.krw);
+078:         obj.put("JPY", fixerrate.jpy);
+079:         obj.put("CNY", fixerrate.cny);
+080:         obj.put("EUR", fixerrate.eur);
+081:         return obj;
+082: 	}
+083: 	// JSON으로 만든 후 파일로 저장한다.
+084: 	public static void main(String[] args) {
+085: 		String date=RestDay.todates();  // 오늘
+086: 		String base="USD";              // 1달러당 환율       
+087: 		JSONObject obj = new JSONObject();
+088:         obj.put("base", base);
+089:         obj.put("date",date);
+090:        
+091: 		JSONArray fixerrate2s=new JSONArray();
+092: 		int j=0;
+093: 		for (int i = -365; i < 1; i++) {
+094: 	    	String todays=RestDay.toWantedDay(date,i);
+095: 	    	if(! RestDay.isRest(todays)){
+096: 	    		FixerRate fixerrate2=FixerConvert.convert(todays,base);
+097: 	    		fixerrate2s.put(j++, toJson(fixerrate2));
+098: 	    	}
+099: 	    }
+100: 		 obj.put("rates",fixerrate2s);
+101: 		try (FileWriter file = new FileWriter(date+""+base+".json")) {
+102:             file.write(obj.toString());
+103:             file.flush();
+104:         } catch (IOException e) {
+105:            System.out.println(e);
+106:         }
+107: 	}
+108: }
+109: 	  

@@ -1,0 +1,68 @@
+01: package kr.co.infopub.chapter.s173;
+02: import java.io.BufferedReader;
+03: import java.io.FileNotFoundException;
+04: import java.io.FileReader;
+05: import java.io.IOException;
+06: import java.util.ArrayList;
+07: public class HowFarDistanceCSV {
+08:  private ArrayList<String> distances=new ArrayList<>();
+09:  public HowFarDistanceCSV (){
+10: 	makeDistances();
+11:  }
+12:  public  void makeDistances(){
+13: 	try {
+14: 		BufferedReader br=new BufferedReader(new FileReader("distance.txt"));
+15: 		String msg="";
+16: 		while((msg=br.readLine())!=null){
+17: 			if(!msg.trim().equals("")){
+18: 				distances.add(ps(msg.trim()));
+19: 			}
+20: 		}
+21: 	} catch (FileNotFoundException e) {
+22: 		System.out.println(e);
+23: 	} catch (IOException e) {
+24: 		System.out.println(e);
+25: 	}
+26:  }
+27:  private  double td(String msg){
+28: 	return Double.parseDouble(msg.trim());
+29:  }
+30:  // lat: 37.661129546698454 lng: 126.83977603912353 ->
+31:  // 37.661129546698454 126.83977603912353
+32:  private  String ps(String msg){
+33: 	String lat=msg.substring(msg.indexOf(":")+1).trim();
+34: 	String nlat=lat.substring(0, lat.indexOf(" ")).trim();
+35: 	String lng=lat.substring(lat.indexOf(":")+1).trim();
+36: 	// String[][] aa=new String[][]{{nlat},{lng}};
+37: 	return nlat+" "+lng;
+38:  }
+39:  // 37.661129546698454 126.83977603912353 ->
+40:  // {37.661129546698454, 126.83977603912353}
+41:  private  String[] ps2(String msg){
+42: 	String lat=msg.substring(0, msg.indexOf(" ")).trim();
+43: 	String lng=msg.substring(msg.indexOf(" ")+1).trim();
+44: 	String[] aa=new String[]{lat,lng};
+45: 	return aa;
+46:  }
+47:  public  double [][] getLatLng(){
+48: 	int size=distances.size();
+49: 	// 위도,경도 구하기
+50: 	double [][] latlng=new double[size][2];
+51: 	for (int i = 0; i < size; i++) {
+52: 		 // {37.661129546698454, 126.83977603912353}
+53: 		// latlng[i][0] -> 37.661129546698454
+54: 		// latlng[i][1] -> 126.83977603912353
+55: 		latlng[i][0]=td(ps2(distances.get(i))[0]);
+56: 		latlng[i][1]=td(ps2(distances.get(i))[1]);
+57: 	}
+58: 	return latlng;
+59:  }
+60:  public ArrayList<Geo> getGeos(){
+61: 	 ArrayList<Geo> geos=new ArrayList<>();
+62: 	 double [][] ltln=getLatLng();
+63: 	 for (int i = 0; i < ltln.length; i++) {
+64: 		 geos.add(new Geo(ltln[i][0],ltln[i][1]));
+65: 	 }
+66: 	 return geos;
+67:  }
+68: }

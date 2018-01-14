@@ -1,0 +1,49 @@
+01: package kr.co.infopub.chapter.s149;
+02: import java.util.Calendar;
+03: public class BioCalendar {
+04: 	//상수  
+05: 	public static final int PHYSICAL = 23;
+06: 	public static final int EMOTIONAL = 28;
+07: 	public static final int INTELLECTUAL = 33;
+08: 	public static void main(String[] args) {
+09: 		  Calendar birth=Calendar.getInstance();
+10: 		  birth.set(1980,3-1,28);  // 0월 ~11월, 
+11: 		  Calendar theDay=Calendar.getInstance();   // 오늘
+12: 		  
+13: 		  long dateBirth=birth.getTimeInMillis();
+14: 		  long dateToDay=theDay.getTimeInMillis();
+15: 		  long days=(dateToDay-dateBirth)/1000/24/60/60;   // 태어난 지 몇일
+16: 		  System.out.println(days);
+17:                     // (1) 개발자가 정의한 메서드를 호출한다. 
+18: 		  double phyval=getBioRhythm( days,  PHYSICAL,     100);
+19: 		  double emoval=getBioRhythm( days,  EMOTIONAL,     100);
+20: 		  double inteval=getBioRhythm( days,  INTELLECTUAL, 100);
+21: 		  
+22: 		  System.out.printf("나의 신체지수 %1$.2f입니다.\n",phyval);
+23: 		  System.out.printf("나의 감정지수 %1$.2f입니다.\n",emoval);
+24: 		  System.out.printf("나의 지성지수 %1$.2f입니다.\n",inteval); 
+25: 	}
+26:     //  s
+27: 	public static double getBioRhythm(long days, int index ,int max) {
+28: 		return max*Math.sin( (days % index) * 2 * Math.PI / index );
+29: 	}
+30: 	public static double getPhysical(long days, int max) {
+31: 		return getBioRhythm(days,PHYSICAL,max);
+32: 	}
+33: 	public static double getEmotional(long days, int max) {
+34: 		return getBioRhythm(days,EMOTIONAL,max);
+35: 	}
+36: 	public static double getIntellectual(long days, int max) {
+37: 		return getBioRhythm(days,INTELLECTUAL,max);
+38: 	}
+39: 	public static long days(int year, int month, int day){
+40: 	    Calendar birth=Calendar.getInstance();
+41: 	    birth.set(year,month-1,day);  // 0월 ~11월, 
+42: 	    Calendar theDay=Calendar.getInstance();   // 오늘
+43: 	    long dateBirth=birth.getTimeInMillis();
+44: 		long dateToDay=theDay.getTimeInMillis();
+45: 	    long days=(dateToDay-dateBirth)/1000/24/60/60;   // 태어난 지 몇일
+46: 	    return days;
+47: 	}
+48: }
+49: 

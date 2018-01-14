@@ -1,0 +1,26 @@
+01: package kr.co.infopub.chapter.s150;
+02: import javafx.application.Application;
+03: import javafx.stage.Stage;
+04: import javafx.scene.Scene;
+05: import javafx.scene.layout.BorderPane;
+06: import javafx.fxml.FXMLLoader;
+07: public class Main extends Application {
+08:  @Override
+09:  public void start(Stage primaryStage) {
+10: 	try {
+11: 		primaryStage.setTitle("Hyo Biorythm ver 1.0");
+12: 		BorderPane root = (BorderPane)FXMLLoader.load(getClass()
+                                      .getResource("BioChar.fxml"));
+13: 		Scene scene = new Scene(root,1200,800);
+14: 		scene.getStylesheets().add(getClass().getResource("application.css")
+                                       .toExternalForm());
+15: 		primaryStage.setScene(scene);
+16: 		primaryStage.show();
+17: 	} catch(Exception e) {
+18: 		e.printStackTrace();
+19: 	}
+20:  }
+21:  public static void main(String[] args) {
+22: 	launch(args);
+23:  }
+24: }

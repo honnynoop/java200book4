@@ -1,0 +1,108 @@
+001: package kr.co.infopub.chapter.s180;
+002: 
+003: import java.io.Serializable;
+004: public class Earthquake implements Serializable {
+005: 
+006: 	public String eqid;
+007: 	public double magnitude;
+008: 	public double longitude;
+009: 	public double latitude;
+010: 	public String source;
+011: 	public String datetime;
+012: 	public double depth;
+013: 	public String location;
+014: 
+015: 	public Earthquake() {
+016: 	}
+017: 
+018: 	public Earthquake(String eqid, double magnitude, double longitude,
+019: 					  double latitude, String source,
+020: 					  String datetime, double depth, String location) {
+021: 		this.eqid = eqid;
+022: 		this.magnitude = magnitude;
+023: 		this.longitude = longitude;
+024: 		this.latitude = latitude;
+025: 		this.source = source;
+026: 		this.datetime = datetime;
+027: 		this.depth = depth;
+028: 		this.location = location;
+029: 	}
+030: 
+031: 	public String getEqid() {
+032: 		return eqid;
+033: 	}
+034: 
+035: 	public void setEqid(String eqid) {
+036: 		this.eqid = eqid;
+037: 	}
+038: 
+039: 	public double getMagnitude() {
+040: 		return magnitude;
+041: 	}
+042: 
+043: 	public void setMagnitude(double magnitude) {
+044: 		this.magnitude = magnitude;
+045: 	}
+046: 
+047: 	public double getLongitude() {
+048: 		return longitude;
+049: 	}
+050: 
+051: 	public void setLongitude(double longitude) {
+052: 		this.longitude = longitude;
+053: 	}
+054: 
+055: 	public double getLatitude() {
+056: 		return latitude;
+057: 	}
+058: 
+059: 	public void setLatitude(double latitude) {
+060: 		this.latitude = latitude;
+061: 	}
+062: 
+063: 	public String getSource() {
+064: 		return source;
+065: 	}
+066: 
+067: 	public void setSource(String source) {
+068: 		this.source = source;
+069: 	}
+070: 
+071: 	public String getDatetime() {
+072: 		return datetime;
+073: 	}
+074: 
+075: 	public void setDatetime(String datetime) {
+076: 		this.datetime = datetime;
+077: 	}
+078: 
+079: 	public double getDepth() {
+080: 		return depth;
+081: 	}
+082: 
+083: 	public void setDepth(double depth) {
+084: 		this.depth = depth;
+085: 	}
+086: 
+087: 	public String getLocation() {
+088: 		return location;
+089: 	}
+090: 
+091: 	public void setLocation(String location) {
+092: 		this.location = location;
+093: 	}
+094: 
+095: 	@Override
+096: 	public String toString() {
+097: 		return "Earthquake{" +
+098: 				"eqid='" + eqid + '\'' +
+099: 				", magnitude=" + magnitude +
+100: 				", longitude=" + longitude +
+101: 				", latitude=" + latitude +
+102: 				", source='" + source + '\'' +
+103: 				", datetime='" + datetime + '\'' +
+104: 				", depth=" + depth +
+105: 				", location='" + location + '\'' +
+106: 				'}';
+107: 	}
+108: }

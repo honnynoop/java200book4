@@ -1,0 +1,82 @@
+01: package kr.co.infopub.chapter.s160;
+02: import java.text.ParseException;
+03: import java.text.SimpleDateFormat;
+04: import java.util.Calendar;
+05: import java.util.Date;
+06: // s62 s111 s118
+07: public class RestDay {
+08: 	public static void main(String[] args) {
+09: 		Calendar cal=Calendar.getInstance();
+10: 		int lastDay=cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+11: 		for (int i= 1; i <=lastDay; i++) {
+12: 			cal.set(Calendar.DAY_OF_MONTH, i);  //1일부터 마지막날까지 
+13: 			if(isRest(toYMD(cal))){             //휴일(토,일)확인
+14: 				System.out.println(toYMD(cal)+" is Rest Day.");
+15: 			}             
+16: 		}
+17: 	}
+18: 	public static String toYMD(Calendar dd){
+19: 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+20: 		return sdf.format(dd.getTime());
+21: 	}
+22: 	// 오늘을 문자열로 
+23: 	public static String todates(){
+24: 		Calendar cal=Calendar.getInstance();
+25: 		return toYMD(cal);
+26: 	}
+27: 	public static boolean isRest(String day){
+28: 		//토, 일만 쉬도록 
+29: 		boolean isRest=false;
+30: 		Calendar tod= todate(day);
+31: 		if(tod.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY || 
+32: 				tod.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY ){ //토요일 또는 일요일
+33: 			isRest=true;
+34: 		}
+35: 		return isRest;
+36: 	}
+37: 	public static String goGo(String ss,int day){
+38: 		Calendar cal=todate(ss);
+39: 		//-7일을 더하면 일주전
+40: 		cal.add(Calendar.DAY_OF_YEAR, day);
+41: 		//칼렌더를 문자열로 
+42: 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+43: 		return sdf.format(cal.getTime());
+44: 	}
+45: 	public static String toWantedDay(String ss,int round){
+46: 		Calendar cal=todate(ss);
+47: 		//-7일을 더하면 일주전
+48: 		cal.add(Calendar.DAY_OF_YEAR, round);
+49: 		//칼렌더를 문자열로 
+50: 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+51: 		return sdf.format(cal.getTime());
+52: 	}
+53: 	public static Calendar todate(String ss){
+54: 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+55: 		Date dd=new Date();
+56: 		try {
+57: 			dd=sdf.parse(ss);
+58: 		} catch (ParseException e) {
+59: 		}
+60: 		Calendar cal=Calendar.getInstance();
+61: 		cal.setTime(dd);
+62: 		return cal;
+63: 	}
+64: 	public static String toDay(String rs){  // 8월 16, 2017
+65: 		SimpleDateFormat sdfDesired = new SimpleDateFormat("MMMMM dd, yyyy");
+66: 		Calendar ts=todate(rs);
+67: 		String sss=sdfDesired.format(ts.getTime());
+68: 		return sss;
+69: 	}
+70: 	public static Date toDate(int year, int month, int day){
+71: 		return toCalendar(year,month,day).getTime();
+72: 	}
+73: 	public static Calendar toCalendar(int year, int month, int day){
+74: 		Calendar cal=Calendar.getInstance();
+75: 		cal.set(year, month-1, day);
+76: 		return cal;
+77: 	}
+78: 	public static String toStrDate(Date dd){
+79: 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+80: 		return sdf.format(dd);
+81: 	}
+82: }

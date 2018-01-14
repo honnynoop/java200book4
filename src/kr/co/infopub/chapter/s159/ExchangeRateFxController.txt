@@ -1,0 +1,48 @@
+01: package kr.co.infopub.chapter.s159;
+02: import javafx.event.ActionEvent;
+03: import javafx.fxml.FXML;
+04: import javafx.scene.control.Button;
+05: import javafx.scene.control.ComboBox;
+06: import javafx.scene.control.Label;
+07: import javafx.scene.control.RadioButton;
+08: import javafx.scene.control.TextField;
+09: public class ExchangeRateFxController {
+10:     @FXML
+11:     private Label lbfrom;
+12:     @FXML
+13:     private TextField tffrom;
+14:     @FXML
+15:     private TextField tfjpy;
+16:     @FXML
+17:     private Label lbto;
+18:     @FXML
+19:     private RadioButton rdother;
+20:     @FXML
+21:     private ComboBox<String> cbfinance;
+22:     @FXML
+23:     private TextField tfusd;
+24:     @FXML
+25:     private Button btncon;
+26:     @FXML
+27:     private TextField tfto;
+28:     @FXML
+29:     private RadioButton rdkrw;
+30:     @FXML
+31:     private TextField tfcny;
+32:     @FXML
+33:     private Label lbboard;
+34:     @FXML
+35:     void initialize() {}
+36:     //콤보박스의 아이템을 선택
+37:     @FXML
+38:     void cbdistanceOnAction(ActionEvent event) {}
+39:     //라디오-다른 국가의 화폐로 환전
+40:     @FXML
+41:     void onOtherAction(ActionEvent event) {}
+42:     //라디오-한화로 환전
+43:     @FXML
+44:     void onKrwAction(ActionEvent event) {}
+45:     //최신 환율 가져오기
+46:     @FXML
+47:     void onConvertAction(ActionEvent event) {}
+48: }

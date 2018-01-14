@@ -1,0 +1,25 @@
+01: package kr.co.infopub.chapter.s166;
+02: import javafx.application.Application;
+03: import javafx.stage.Stage;
+04: import javafx.scene.Scene;
+05: import javafx.scene.layout.BorderPane;
+06: import javafx.fxml.FXMLLoader;
+07: public class Main extends Application {
+08: 	@Override
+09: 	public void start(Stage primaryStage) {
+10: 		try {
+11: 			primaryStage.setTitle("Distance Conversion");
+12: 			BorderPane root = (BorderPane)FXMLLoader.load(getClass().getResource("DistanceConversionFx.fxml"));
+13: 			Scene scene = new Scene(root,800,400);
+14: 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+15: 			primaryStage.setScene(scene);
+16: 			primaryStage.setResizable(false);
+17: 			primaryStage.show();
+18: 		} catch(Exception e) {
+19: 			e.printStackTrace();
+20: 		}
+21: 	}
+22: 	public static void main(String[] args) {
+23: 		launch(args);
+24: 	}
+25: }

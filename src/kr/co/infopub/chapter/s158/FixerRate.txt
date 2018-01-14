@@ -1,0 +1,57 @@
+01: package kr.co.infopub.chapter.s158;
+02: public class FixerRate {
+03: 	public String base;
+04: 	public String date;
+05: 	public double usd;
+06: 	public double jpy;
+07: 	public double krw;
+08: 	public double cny;
+09: 	public double eur;
+10: 	@Override
+11: 	public String toString() {
+12: 		return "FixerRate [base=" + base + ", date=" + date + ","
+13: 				+ " usd=" + usd + ", jpy=" + jpy + ", krw=" + krw
+14: 				+ ", cny=" + cny + ", eur=" + eur + "]";
+15: 	}
+16: 	
+17: }
+18: /*
+19: http://api.fixer.io/2017-06-09?base=USD
+20: {
+21:   "base": "USD",
+22:   "date": "2017-06-08",
+23:   "rates": {
+24:     "AUD": 1.3264,
+25:     "BGN": 1.7417,
+26:     "BRL": 3.2819,
+27:     "CAD": 1.3514,
+28:     "CHF": 0.96678,
+29:     "CNY": 6.7978,
+30:     "CZK": 23.393,
+31:     "DKK": 6.6242,
+32:     "GBP": 0.7726,
+33:     "HKD": 7.7969,
+34:     "HRK": 6.6104,
+35:     "HUF": 274.3,
+36:     "IDR": 13298,
+37:     "ILS": 3.5358,
+38:     "INR": 64.241,
+39:     "JPY": 110.22,
+40:     "KRW": 1123.3,
+41:     "MXN": 18.23,
+42:     "MYR": 4.2685,
+43:     "NOK": 8.481,
+44:     "NZD": 1.387,
+45:     "PHP": 49.536,
+46:     "PLN": 3.7461,
+47:     "RON": 4.0667,
+48:     "RUB": 57.008,
+49:     "SEK": 8.7172,
+50:     "SGD": 1.3826,
+51:     "THB": 34.037,
+52:     "TRY": 3.5502,
+53:     "ZAR": 12.867,
+54:     "EUR": 0.89055
+55:   }
+56: }
+57:  */

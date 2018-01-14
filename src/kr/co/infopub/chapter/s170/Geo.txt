@@ -1,0 +1,24 @@
+01: package kr.co.infopub.chapter.s170;
+02: public class Geo {
+03: 	private double latitude;      
+04: 	private double longitude;   
+05: 	public Geo(double latitude, double longitude) {
+06: 		this.latitude = latitude;
+07: 		this.longitude = longitude;
+08: 	}
+09: 	public Geo() {            // 기본생성자
+10: 		this(37.5, 127.0);   
+11: 	}
+12: 	public double getLatitude() {   //getter 
+13: 		return latitude;
+14: 	}
+15: 	public void setLatitude(double latitude) { //setter
+16: 		this.latitude = latitude;
+17: 	}
+18: 	public double getLongitude() {
+19: 		return longitude;
+20: 	}
+21: 	public void setLongitude(double longitude) {
+22: 		this.longitude = longitude;
+23: 	}
+24: }

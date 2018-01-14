@@ -1,0 +1,57 @@
+01: package kr.co.infopub.chapter.s176;
+02: import java.io.BufferedReader;
+03: import java.io.FileNotFoundException;
+04: import java.io.FileReader;
+05: import java.io.IOException;
+06: import org.json.JSONArray;
+07: import org.json.JSONObject;
+08: // s174동일하며 howfar()를 추가, howfar()는 s174 메인과 동일하다.
+09: public class HowFarDistance2 {
+10:  private String json="";
+11:  public HowFarDistance2 (){}
+12:  public  void makeDistances(String fname){
+13: 	StringBuffer sb=new StringBuffer();
+14: 	try {
+15: 		BufferedReader br=new BufferedReader(new FileReader(fname));
+16: 		String msg="";
+17: 		while((msg=br.readLine())!=null){
+18: 			if(!msg.trim().equals("")){
+19: 				sb.append(msg.trim());
+20: 			}
+21: 		}
+22: 	} catch (FileNotFoundException e) {
+23: 		System.out.println(e);
+24: 	} catch (IOException e) {
+25: 		System.out.println(e);
+26: 	}
+27: 	json=sb.toString();
+28:  }
+29:  public  double [][] getLatLng(){
+30: 	JSONObject jObject = new JSONObject(json);
+31: 	JSONArray loc = jObject.getJSONArray("loc");
+32: 	double [][]latlng=new double[loc.length()][2];
+33: 	for(int i=0; i<loc.length(); i++) {
+34: 		JSONObject local = loc.getJSONObject(i);
+35: 		String markerX = local.getString("markerX");
+36: 		String markerY = local.getString("markerY");
+37: 		latlng[i][0]=Double.parseDouble(markerX.trim());
+38: 		latlng[i][1]=Double.parseDouble(markerY.trim());
+39: 	}	
+40: 	return latlng;
+41:  }
+42:  // 총 거리 구하기(메인에서 사용)
+43:  public double howfar(){
+44: 	double [][]latlng=getLatLng();  //2차원 배열을 얻어옴
+45: 	double tot=0.0;   //산책한 총 거리 
+46: 	for (int i = 0; i < latlng.length-1; i++) {
+47: 		double distance=HaversineDistance.distance(
+48: 		   latlng[i][0], latlng[i][1], latlng[i+1][0], latlng[i+1][1]);
+49: 		tot+=distance;
+50: 		String ss=String.format("(%f,%f)-(%f,%f) 사이 거리 : %f",
+51: 			latlng[i][0], latlng[i][1], latlng[i+1][0], latlng[i+1][1],
+52: 			distance);
+53: 		System.out.println(ss);
+54: 	}
+55: 	return tot;
+56:  }
+57: }

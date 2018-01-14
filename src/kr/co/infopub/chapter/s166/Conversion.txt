@@ -1,0 +1,15 @@
+01: package kr.co.infopub.chapter.s166;
+02: public class Conversion {
+03:  public static final String [] names={"Cm","M","Inch","Feet","Yard","Mile"};
+04:  public static final double []distance={1,0.01,0.3937007874015748,
+05: 		0.03280839895013123,0.010936132983377079,0.00000621371192237334};
+06:  public static double [][] convert(){
+07: 	double [][] mm=new double [distance.length][distance.length];
+08: 	for(int i=0; i<distance.length; i++){
+09: 		for (int j = 0; j < distance.length; j++) {
+10: 			mm[i][j]=distance[j]/distance[i];
+11: 		}
+12: 	}
+13: 	return mm;
+14:  }
+15: }

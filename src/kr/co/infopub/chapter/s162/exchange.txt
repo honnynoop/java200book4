@@ -1,0 +1,2 @@
+먼저 FixerConvert를 실행시켜 오늘까지의 주식을 저장한다.
+그리고 ExchangeLineChart를 실행시킨다.

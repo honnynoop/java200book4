@@ -1,0 +1,54 @@
+01: package kr.co.infopub.chapter.s162;
+02: import org.json.JSONArray;
+03: import org.json.JSONObject;
+04: import javafx.application.Application;
+05: import javafx.scene.Scene;
+06: import javafx.scene.chart.CategoryAxis;
+07: import javafx.scene.chart.LineChart;
+08: import javafx.scene.chart.NumberAxis;
+09: import javafx.scene.chart.XYChart;
+10: import javafx.stage.Stage;
+11: public class ExchangeLineChart extends Application{
+12:   public static void main(String[] args) {
+13:     launch(args);
+14:   }
+15:   @Override
+16:   public void start(Stage primaryStage) {
+17: 	primaryStage.setTitle("Exchage Rate");  
+18: 	String date=RestDay.todates();  // 오늘
+19: 	String base="USD";              // 1달러당 환율   
+20: 	
+21: 	CategoryAxis xAxis = new CategoryAxis();
+22: 	NumberAxis yAxis = new NumberAxis(1080,1230,10);
+23: 	yAxis.setLabel("KRW /1 "+base);
+24: 	xAxis.setLabel("Date");
+25: 	LineChart<String, Number> lineChart = 
+26: 			        new LineChart<String, Number>(xAxis, yAxis);
+27: 	lineChart.setTitle("Exchage Rates "+date);
+28: 	
+29: 	XYChart.Series<String, Number> series1 =
+30: 			             new XYChart.Series<String, Number>();
+31: 	physicalChartData(series1,base, date);
+32: 
+33: 	Scene scene = new Scene(lineChart, 1400, 800);
+34:     lineChart.getData().addAll(series1);
+35:     primaryStage.setScene(scene);
+36:     primaryStage.show();
+37:   }
+38:   public  void physicalChartData(XYChart.Series<String, Number> series1, 
+39: 		  String base,String date ) {
+40:     series1.setName("KRW");
+41:     JSONObject jsobj=FixerConvertJSON.convert(date,base);
+42:     JSONArray rates=jsobj.getJSONArray("rates");
+43: 	for(int i=0; i< rates.length() ;i++){ // 일년 0~365 366개
+44: 		JSONObject fix=rates.getJSONObject(i);
+45: 		// 365일전 부터 오늘까지
+46: 		String todays=RestDay.toWantedDay(date,i+1-rates.length()); //1+365-366
+47:     	if(!RestDay.isRest(todays)){
+48:     		series1.getData().add(
+49:     		  new XYChart.Data<String, Number>(todays, fix.getDouble("KRW") ));
+50:     		System.out.println(fix);
+51:     	}
+52: 	}
+53:   }
+54: }

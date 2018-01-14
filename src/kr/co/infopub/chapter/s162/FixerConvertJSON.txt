@@ -1,0 +1,35 @@
+01: package kr.co.infopub.chapter.s162;
+02: import org.json.JSONArray;
+03: import org.json.JSONObject;
+04: import java.io.BufferedReader;
+05: import java.io.FileReader;
+06: public class FixerConvertJSON {
+07: 	public static JSONObject convert(String date,String base) {
+08: 		JSONObject jObject = new JSONObject();
+09: 		BufferedReader br=null;
+10: 		try {
+11: 			br=new BufferedReader(new FileReader(date+""+base+".json"));
+12: 			StringBuffer sb=new StringBuffer();
+13: 			String msg="";
+14: 			// http://api.fixer.io/2017-06-09?base=USD 를 읽어 들인다.
+15: 			while((msg=br.readLine())!=null){
+16: 				sb.append(msg);
+17: 			}
+18: 			jObject=new JSONObject(sb.toString());
+19: 		} catch (Exception e) {
+20: 			
+21: 		}
+22: 		return jObject;
+23: 	}
+24: 	public static void main(String[] args) {
+25: 		String date=RestDay.todates();  // 오늘
+26: 		String base="USD";              // 1달러당 환율   
+27: 		JSONObject jsobj=FixerConvertJSON.convert(date,base);
+28: 		JSONArray rates=jsobj.getJSONArray("rates");
+29: 		for(int i=0; i< rates.length() ;i++){
+30: 			JSONObject nboj=rates.getJSONObject(i);
+31: 			System.out.println(nboj);
+32: 		}
+33: 	}
+34: }
+35: 	  

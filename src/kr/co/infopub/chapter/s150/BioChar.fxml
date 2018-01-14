@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
+ fx:controller="kr.co.infopub.chapter.s150.BioCharController">
+   <center>
+      <BorderPane prefHeight="600.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+         <center>
+            <LineChart fx:id="lineChart" BorderPane.alignment="CENTER" >
+              <xAxis>
+                <CategoryAxis fx:id="xAxis" side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis fx:id="yAxis"  side="LEFT" />
+              </yAxis>
+            </LineChart>
+         </center></BorderPane>
+   </center>
+   <top>
+      <AnchorPane prefHeight="200.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+         <children>
+            <DatePicker fx:id="dateTime" layoutX="217.0" layoutY="71.0" onAction="#onDateTimeClick" prefHeight="29.0" prefWidth="326.0" promptText="생일" />
+            <Label layoutX="52.0" layoutY="76.0" prefHeight="19.0" prefWidth="147.0" text="생일을 선택하세요" />
+         </children>
+      </AnchorPane>
+   </top>
+</BorderPane>

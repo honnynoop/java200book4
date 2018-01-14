@@ -1,0 +1,11 @@
+01: package kr.co.infopub.chapter.s141;
+02: public class  MyRun implements Runnable{
+03: 	public void run(){
+04: 		show();
+05: 	}
+06: 	public void show(){
+07: 		for(int i=0;i<500;i++){
+08: 			System.out.print("S");
+09: 		}
+10: 	}
+11: }

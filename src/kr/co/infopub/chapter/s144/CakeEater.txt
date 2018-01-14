@@ -1,0 +1,18 @@
+01: package kr.co.infopub.chapter.s144;
+02: public class CakeEater extends Thread {
+03: 	private CakePlate cake;
+04: 	public CakeEater(CakePlate cake){
+05: 		setCakePlate(cake);
+06: 	}
+07: 	public void setCakePlate(CakePlate cake){
+08: 		this.cake=cake;
+09: 	}
+10: 	public CakePlate getCakePlate(){
+11: 		return cake;
+12: 	}
+13: 	public void run(){
+14: 		for(int i=0;i<50;i++){
+15: 			cake.eatBread();
+16: 		}
+17: 	}
+18: }

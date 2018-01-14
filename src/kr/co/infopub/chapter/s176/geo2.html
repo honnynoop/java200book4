@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>How Far You Work</title>
+<meta charset="EUC-KR">
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+html {
+	height: 100%
+}
+body {
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	font-size: 9pt;
+}
+div {
+	float: left;
+}
+input {
+	font-size: 9pt;
+}
+</style>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRGWxNf_xpelvyX6KKXfrzb1PI_Deq8T4"></script>
+<script type="text/javascript">
+	function updateMessage(msg){
+	  document.getElementById("resultMessage").innerHTML=msg;
+	  document.getElementById("myresult").innerHTML="<h3>"+msg+"</h3>"; 
+	};
+	function clearMessage(){
+	  document.getElementById("resultMessage").innerHTML="";
+	  document.getElementById("myresult").innerHTML="";
+	};
+	function howfarFX(){
+	  // html에서 얻은 좌표를 javafx에 넣어줌
+	  //JS app.saveJSToJavaFxFile() -> java saveJSToJavaFxFile
+	  app.saveJSToJavaFxFile(document.getElementById("_location").value);
+	};
+	function drawLine(msg){
+		 document.getElementById("_location").value=JSON.stringify(msg);
+	};
+</script>
+</head>
+<body>
+<div id="map_canvas"></div>
+<form name="frmForm" id="_frmForm" method="post" action="">
+<div id="control" align="left">
+<dl>
+<dd>
+	<div id="myresult"></div>
+</dd>
+<dd>
+	<input type="button" value="JS to Label" onclick='javascript:howfarFX();'>
+</dd>
+<dd>
+	<textarea rows="10" cols="80" name='location' id="_location"></textarea>
+</dd>
+<dd>
+	<div id="resultMessage" ></div>
+</dd>
+</dl>
+</div>
+</form>
+</body>
+</html>

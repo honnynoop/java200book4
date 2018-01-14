@@ -1,0 +1,57 @@
+01: package kr.co.infopub.chapter.s168;
+02: import javafx.beans.value.ChangeListener;
+03: import javafx.beans.value.ObservableValue;
+04: import javafx.fxml.FXML;
+05: import javafx.scene.control.Label;
+06: import javafx.scene.control.Slider;
+07: import javafx.scene.image.Image;
+08: import javafx.scene.image.ImageView;
+09: public class TemperatureFXController {
+10:  @FXML
+11:  private Slider cdegree;
+12:  @FXML
+13:  private Slider fdegree;
+14:  @FXML
+15:  private Label lbdegree;
+16:  @FXML
+17:  void initialize() {
+18: 	cdegree.valueProperty().addListener(new ChangeListener<Number>() {
+19:          public void changed(ObservableValue<? extends Number> ov,
+20:              Number old_val, Number new_val) {
+21:                  System.out.println("C->F:"+new_val.doubleValue());
+22:                  double cval=new_val.doubleValue();
+23:                  double fval=TemperatureConv.toFahrenheit(cval);
+24:                  String sf=String.format("¼·¾¾ %.2fµµ =\n\nÈ­¾¾ %.2fµµ.",
+25:                 		 cval,fval);		
+26:                  next(cval);
+27:                  fdegree.setValue(fval);		 
+28:                  lbdegree.setText(sf);
+29:          }
+30:      });
+31: 	fdegree.valueProperty().addListener(new ChangeListener<Number>() {
+32:         public void changed(ObservableValue<? extends Number> ov,
+33:             Number old_val, Number new_val) {
+34:                 System.out.println("F->C:"+new_val.doubleValue());
+35:                 double fval=new_val.doubleValue();
+36:                 double cval=TemperatureConv.toCelsius(fval);
+37:                 String sf=String.format("È­¾¾ %.2fµµ =\n\n¼·¾¾ %.2fµµ .",
+38:                 		fval,cval);		
+39:                 back(fval);
+40:                 cdegree.setValue(cval);		 
+41:                 lbdegree.setText(sf);
+42:            }
+43:     });
+44:  }
+45:  // ¼öÇÐÀÚÇ¥¿Í ±×·¡ÇÁ ÁÂÇ¥ Â÷ÀÌ
+46:  static double height=412;
+47:  void next(double cval){
+48: 	Image image = new Image(getClass().getResourceAsStream("gogo.png"));
+49: 	lbdegree.setGraphic(new ImageView(image));
+50: 	lbdegree.setTranslateY(-height*cval/100);
+51:  }
+52:  void back(double fval){
+53: 	Image image = new Image(getClass().getResourceAsStream("gogo.png"));
+54: 	lbdegree.setGraphic(new ImageView(image));
+55: 	lbdegree.setTranslateY(-height*(fval-32)/180);
+56:  }
+57: }

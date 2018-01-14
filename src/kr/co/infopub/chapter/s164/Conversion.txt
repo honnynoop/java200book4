@@ -1,0 +1,21 @@
+01: package kr.co.infopub.chapter.s164;
+02: // 이차원 배열과 반복문 for
+03: public class Conversion {
+04:  public static void main(String[] args) {
+05: 	String [] names={"Cm","M","Inch","Feet","Yard","Mile"};
+06: 	double []distance={1,0.01,0.3937007874015748,0.03280839895013123,
+07: 			            0.010936132983377079,0.00000621371192237334};
+08: 	System.out.printf("\t\t");
+09: 	for(int i=0; i<names.length; i++){
+10: 		System.out.printf("%s\t\t\t",names[i]);
+11: 	}
+12: 	System.out.println();
+13: 	for(int i=0; i<distance.length; i++){
+14: 		System.out.printf("%s\t",names[i]);
+15: 		for (int j = 0; j < distance.length; j++) {
+16: 			System.out.printf("%19.12f\t",distance[j]/distance[i]);
+17: 		}
+18: 		System.out.println();
+19: 	}
+20:  }
+21: }

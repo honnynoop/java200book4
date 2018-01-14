@@ -1,0 +1,44 @@
+01: package kr.co.infopub.chapter.s145;
+02: import java.io.Serializable;
+03: public class Student implements Cloneable, Serializable{
+04: 	private static final long serialVersionUID=12234214234L;
+05: 	private String name;
+06: 	private int age;
+07: 	private String addr;
+08: 	
+09: 	public Student(String name, int age,String addr) {
+10: 		this.name=name;
+11: 		this.age=age;
+12: 		this.addr=addr;
+13: 	}//Student
+14: 	public String getAddr() {return addr;}
+15: 	public int getAge() {return age;}
+16: 	public String getName() {return name;}
+17: 	public void setAddr(String string) {addr = string;}
+18: 	public void setAge(int i) {age = i;}
+19: 	public void setName(String string) {name = string;}
+20: 	public String toString(){
+21: 		return name+"   "+age+"    "+addr;
+22: 	}//toString
+23: 	public Object clone(){ // 멤버가 기본타입과 String으로만 구성
+24: 		try{
+25: 			return super.clone();
+26: 		}catch(CloneNotSupportedException e){
+27: 			return this;
+28: 		}
+29: 	}//clone
+30: 	public boolean equals(Object obj){ // 멤버비교 같은객체
+31: 		boolean isE=false;
+32: 		Student temp=(Student)obj;
+33: 		if(temp.getName().equals(name) && temp.getAge()==age
+34: 			&& temp.getAddr().equals(addr)){
+35: 			isE=true;
+36: 		}
+37: 		return isE;
+38: 	}//equals
+39: 	public int hashCode(){
+40: 		int temp=0;
+41: 		temp=name.hashCode()+addr.hashCode()+age+37;
+42: 		return temp;
+43: 	}//hashCode
+44: }

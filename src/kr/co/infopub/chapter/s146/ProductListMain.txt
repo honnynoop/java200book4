@@ -1,0 +1,28 @@
+01: package kr.co.infopub.chapter.s146;
+02: public class ProductListMain {
+03:  public static void main(String[] args) {
+04:  // aaaaaa/b/cccc/ddd/eee/f/g/hhh/iii/jjj/k
+05: 	String [] proarr={
+06: 			"100001Astch 19100AA 72 51 89B",
+07: 			"100002Agali  1 84CC  6 87140A",
+08: 			"100003Bmiat 21147CC 54 12250B",
+09: 			"100004Aoran 14 56CA 87 65293B",
+10: 			"100005Bsj24 37 67CC 35 95105C"
+11: 	};
+12: 	ProductList plist=new ProductList();
+13:  // "100001Astch 19100AA 72 51 89B" --> 
+14:  // 100001/A/stch/19/100/A/A/72/51/89/B/ 
+15: 	for (String pstr : proarr) {
+16: 		String[]  spp=plist.splist(pstr);
+17: 		for (String sp : spp) {
+18: 			System.out.printf("%s/",sp);
+19: 		}
+20: 		System.out.println();
+21: 	}
+22:  // 100001/A/stch/19/100/A/A/72/51/89/B/--> Product °´Ã¼
+23: 	for (String pstr : proarr) {
+24: 		Product   p=plist.splistP(pstr);
+25: 		System.out.println(p);
+26: 	}
+27:  }
+28: }

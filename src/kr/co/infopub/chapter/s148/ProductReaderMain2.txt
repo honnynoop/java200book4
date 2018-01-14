@@ -1,0 +1,41 @@
+01: package kr.co.infopub.chapter.s148;
+02: import java.util.List;
+03: import java.util.stream.IntStream;
+04: public class ProductReaderMain2 {
+05:  public static void main(String[] args) {
+06:   ProductReader kr=new ProductReader();
+07:   ProductList plist=new ProductList();
+08: 
+09:   if(kr.isExist("kisul\\abc3031.txt")){
+10: 	kr.readTexts("kisul\\abc3031.txt");
+11: 	int num=kr.listSize();
+12: 	System.out.println("µ¥ÀÌÅ¸ °³¼ö: "+num);
+13: 	System.out.println("AllDatas===>");
+14: 	List<Product> producst=plist.getAllProducts(kr.getAllLines());
+15: 	IntStream.range(0, producst.size()).forEach(
+16: 	  i ->{ System.out.printf("%d%s\n",(i+1),producst.get(i).toString());});
+17: 	
+18: 	System.out.println("Grad in A or C===>");
+19: 	//String pGrade;    // Á¦Á¶µî±Þ ¹®ÀÚ 1 ¸¶Áö¸· ¹®ÀÚ
+20: 	String [] acc={"A","C"};
+21: 	List<Product> gradepros=plist.getAllProdInGrade(acc,producst);
+22: 	IntStream.range(0, gradepros.size()).forEach(
+23: 	  i ->{ System.out.printf("%d%s\n",(i+1),gradepros.get(i).toString());});
+24: 	
+25: 	System.out.println("Sort ===>");
+26: 	gradepros.sort(Product::compareProduct); //compare -> product static À¸·Î ÀÌµ¿
+27: 	IntStream.range(0, gradepros.size()).forEach(
+28: 	  i ->{ System.out.printf("%d%s\n",(i+1),gradepros.get(i).toString());});
+29: 	
+30: 	// 5¹øÀÇ    Á¤º¸¸¦ ­ƒ·Â
+31: 	Product result=gradepros.get(4);
+32:     String msgs=String.format("%s\t%s\t%s", 
+33:     		result.getPMoney(),result.getPPoint(),result.getProdNum()) ;
+34: 	ResultWrite rw=new ResultWrite();
+35: 	System.out.println(rw.isExist("kisul\\Ans1.txt"));
+36: 	rw.setTexts("kisul\\Ans1.txt",msgs);
+37: 	String krs=kr.readText("kisul\\Ans1.txt");
+38: 	System.out.println(krs);
+39:   }
+40:  }
+41: }

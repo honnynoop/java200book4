@@ -1,0 +1,92 @@
+  var infowindow = new google.maps.InfoWindow({
+    content: "Hello World!"
+  });
+  infowindow.open(map,marker);
+  
+  https://www.w3schools.com/graphics/tryit.asp?filename=trymap_overlays_infowindow
+  
+    var marker = new google.maps.Marker({
+    position: myCenter,
+    icon: "pinkball.png"
+  });
+  marker.setMap(map);
+  
+  https://www.w3schools.com/graphics/tryit.asp?filename=trymap_overlays_icon
+  
+    var marker = new google.maps.Marker({position:myCenter});
+  marker.setMap(map);
+
+  // Zoom to 9 when clicking on marker
+  google.maps.event.addListener(marker,'click',function() {
+    map.setZoom(9);
+    map.setCenter(marker.getPosition());
+  });
+  
+  
+  
+    var map = new google.maps.Map(mapCanvas, mapOptions);
+    
+  google.maps.event.addListener(map, 'click', function(event) {
+    placeMarker(map, event.latLng);
+  });
+}
+
+function placeMarker(map, location) {
+  var marker = new google.maps.Marker({
+    position: location,
+    map: map
+  });
+  var infowindow = new google.maps.InfoWindow({
+    content: 'Latitude: ' + location.lat() + '<br>Longitude: ' + location.lng()
+  });
+  infowindow.open(map,marker);
+}
+
+       var infowindow = new google.maps.InfoWindow({
+         content: 'Latitude: ' + location.lat() + '<br>Longitude: ' + location.lng()
+        });
+
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map,
+          title: 'Uluru (Ayers Rock)'
+        });
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+
+
+
+https://developers.google.com/maps/documentation/javascript/examples/circle-simple?hl=ko
+
+
+
+
+
+
+https://developers.google.com/maps/documentation/javascript/examples/map-coordinates?hl=ko
+
+
+
+
+효은이의 
+AIzaSyB3vzzGs2oyx7h1WH_xfE4buUu4OCTAyZM
+
+
+		/*
+			var latlng = new google.maps.LatLng(tripArray[i].markerX, tripArray[i].markerY);
+			var myOptions = {
+					position : latlng,
+					draggable : true,
+					map : globalMap,
+					id : i,
+					visible : true,
+					icon:'bar.png'
+				};
+		
+                
+        marklist[i] = new google.maps.Marker(myOptions);
+        marklist[i].addListener('mouseover', function(e) {
+        	  placeMarker(globalMap,  e.latLng);
+        });
+*/

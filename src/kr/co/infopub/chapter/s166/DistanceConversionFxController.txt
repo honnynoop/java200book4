@@ -1,0 +1,61 @@
+01: package kr.co.infopub.chapter.s166;
+02: import javafx.collections.FXCollections;
+03: import javafx.collections.ObservableList;
+04: import javafx.event.ActionEvent;
+05: import javafx.fxml.FXML;
+06: import javafx.scene.control.ComboBox;
+07: import javafx.scene.control.TextField;
+08: public class DistanceConversionFxController {
+09:  @FXML
+10:  private TextField tfinput;
+11:  @FXML
+12:  private TextField tfyard;
+13:  @FXML
+14:  private TextField tfmile;
+15:  @FXML
+16:  private TextField tfcm;
+17:  @FXML
+18:  private TextField tfm;
+19:  @FXML
+20:  private TextField tfinch;
+21:  @FXML
+22:  private ComboBox<String> cbdistance;
+23:  @FXML
+24:  private TextField tffeet;
+25: 
+26:  double [][] convDistance;
+27:  // Conversion.names={"Cm","M","Inch","Feet","Yard","Mile"};
+28:  @FXML
+29:  void initialize() {
+30: 	ObservableList<String> options = FXCollections.observableArrayList();
+31: 	options.addAll( Conversion.names );  //static 이라 객체 생성 필요없다.
+32: 	cbdistance.setItems(options);
+33: 	
+34: 	//거리 환산표(2차원 배열) 작성
+35: 	convDistance=Conversion.convert();
+36:  }
+37:  @FXML
+38:  void cbdistanceOnAction(ActionEvent event) {
+39: 
+40: 	String sinput=tfinput.getText();
+41: 	double value=0.0;
+42: 	if(sinput!=null && !sinput.equals("")){
+43: 		value=Double.parseDouble(sinput);
+44: 	}
+45: 	
+46: 	int selectIndex=-1;
+47: 	if(cbdistance.getSelectionModel()!=null){
+48: 		selectIndex=cbdistance.getSelectionModel().getSelectedIndex();
+49: 	}
+50: 			
+51: 	if(selectIndex>=0){
+52: 		//2차원 배열의 값을 출력 => value*convDistance[selectIndex][0]
+53: 		tfcm.setText(String.format("%.10f", value*convDistance[selectIndex][0]));
+54:     	tfm.setText(String.format("%.10f", value*convDistance[selectIndex][1]));
+55:     	tfinch.setText(String.format("%.10f", value*convDistance[selectIndex][2]));
+56:     	tffeet.setText(String.format("%.10f", value*convDistance[selectIndex][3]));
+57:     	tfyard.setText(String.format("%.10f", value*convDistance[selectIndex][4]));
+58:     	tfmile.setText(String.format("%.10f", value*convDistance[selectIndex][5]));
+59: 	}
+60:  }
+61: }
